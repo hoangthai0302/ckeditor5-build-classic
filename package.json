@@ -1,7 +1,7 @@
 {
-  "name": "@ckeditor/ckeditor5-build-classic",
+  "name": "@gauravjain028/ckeditor5-build-classic",
   "version": "1.0.0-alpha.2",
-  "description": "CKEditor 5 classic editor build.",
+  "description": "CKEditor 5 classic editor build for ucraft",
   "keywords": [
     "ckeditor5",
     "ckeditor5-build",
@@ -45,10 +45,10 @@
   "author": "CKSource (http://cksource.com/)",
   "license": "(GPL-2.0 OR LGPL-2.1 OR MPL-1.1)",
   "homepage": "https://ckeditor5.github.io",
-  "bugs": "https://github.com/ckeditor/ckeditor5-build-classic/issues",
+  "bugs": "https://github.com/gauravjain028/ckeditor5-build-classic/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ckeditor/ckeditor5-build-classic.git"
+    "url": "https://github.com/gauravjain028/ckeditor5-build-classic.git"
   },
   "scripts": {
     "build": "npm run create-entry-file && npm run build-ckeditor",
