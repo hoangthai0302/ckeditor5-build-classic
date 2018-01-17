@@ -21,6 +21,9 @@ import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import ImageuploadPlugin from '@ckeditor/ckeditor5-upload/src/imageupload';
 
+/* Ucraft Plugins */
+import UcMediaPlugin from '../plugins/media/plugin';
+
 export default class ClassicEditor extends ClassicEditorBase {}
 
 ClassicEditor.build = {
@@ -40,7 +43,8 @@ ClassicEditor.build = {
 		LinkPlugin,
 		ListPlugin,
 		ParagraphPlugin,
-		ImageuploadPlugin
+		ImageuploadPlugin,
+        UcMediaPlugin
 	],
 	config: {
 		toolbar: {
@@ -53,16 +57,23 @@ ClassicEditor.build = {
 				'numberedList',
 				'blockQuote',
 				'undo',
-				'redo'
+				'redo',
+				'ucMedia'
 			]
 		},
 		image: {
-			toolbar: [
-				'imageStyleFull',
-				'imageStyleSide',
-				'|',
-				'imageTextAlternative'
-			]
+            toolbar: [ 'imageTextAlternative', '|', 'imageStyleAlignLeft', 'imageStyleFull', 'imageStyleAlignRight' ],
+
+            styles: [
+                // This option is equal to a situation where no style is applied.
+                'imageStyleFull',
+
+                // This represents an image aligned to left.
+                'imageStyleAlignLeft',
+
+                // This represents an image aligned to right.
+                'imageStyleAlignRight'
+            ]
 		}
 	}
 };
