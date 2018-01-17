@@ -37,7 +37,6 @@ class UcMedia extends Plugin {
 
                 let callback = function(imageUrl) {
                     editor.document.enqueueChanges( () => {
-                        alert(imageUrl);
                         const imageElement = new ModelElement( 'image', {
                             src: imageUrl
                         } );
