@@ -20,6 +20,8 @@ module.exports = {
 		'@ckeditor/ckeditor5-autoformat/src/autoformat',
 		'@ckeditor/ckeditor5-basic-styles/src/bold',
 		'@ckeditor/ckeditor5-basic-styles/src/italic',
+        '@ckeditor/ckeditor5-basic-styles/src/underline',
+        '@ckeditor/ckeditor5-basic-styles/src/code',
 		'@ckeditor/ckeditor5-block-quote/src/blockquote',
 		'@ckeditor/ckeditor5-easy-image/src/easyimage',
 		'@ckeditor/ckeditor5-heading/src/heading',
@@ -31,6 +33,8 @@ module.exports = {
 		'@ckeditor/ckeditor5-list/src/list',
 		'@ckeditor/ckeditor5-paragraph/src/paragraph',
 		'@ckeditor/ckeditor5-upload/src/imageupload',
+		'@ckeditor/ckeditor5-autoformat/src/autoformat',
+		'@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor'
 	],
 
 	// UI language. Language codes follow the https://en.wikipedia.org/wiki/ISO_639-1 format.
