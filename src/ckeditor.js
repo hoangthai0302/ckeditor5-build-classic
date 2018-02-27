@@ -37,6 +37,17 @@ import UcMediaPlugin from '../plugins/media/plugin';
 export default class ClassicEditor extends ClassicEditorBase {}
 
 ClassicEditor.build = {
+    heading:  {
+        options: [
+            { modelElement: 'paragraph', title: 'P', class: 'ck-heading_paragraph' },
+            { modelElement: 'heading1', viewElement: 'h1', title: 'H1', class: 'ck-heading_heading1' },
+            { modelElement: 'heading2', viewElement: 'h2', title: 'H2', class: 'ck-heading_heading2' },
+            { modelElement: 'heading3', viewElement: 'h3', title: 'H3', class: 'ck-heading_heading3' },
+            { modelElement: 'heading4', viewElement: 'h4', title: 'H4', class: 'ck-heading_heading4' },
+            { modelElement: 'heading5', viewElement: 'h5', title: 'H5', class: 'ck-heading_heading5' },
+            { modelElement: 'heading6', viewElement: 'h6', title: 'H6', class: 'ck-heading_heading6' }
+        ]
+    },
 	plugins: [
 		EssentialsPlugin,
 		UploadadapterPlugin,
@@ -90,6 +101,17 @@ ClassicEditor.build = {
                 // This represents an image aligned to right.
                 'imageStyleAlignRight'
             ]
-		}
+		},
+        heading:  {
+            options: [
+                { modelElement: 'paragraph', title: 'P', class: 'ck-heading_paragraph' },
+                { modelElement: 'heading1', viewElement: 'h1', title: 'H1', class: 'ck-heading_heading1' },
+                { modelElement: 'heading2', viewElement: 'h2', title: 'H2', class: 'ck-heading_heading2' },
+                { modelElement: 'heading3', viewElement: 'h3', title: 'H3', class: 'ck-heading_heading3' },
+                { modelElement: 'heading4', viewElement: 'h4', title: 'H4', class: 'ck-heading_heading4' },
+                { modelElement: 'heading5', viewElement: 'h5', title: 'H5', class: 'ck-heading_heading5' },
+                { modelElement: 'heading6', viewElement: 'h6', title: 'H6', class: 'ck-heading_heading6' }
+            ]
+        }
 	}
 };
