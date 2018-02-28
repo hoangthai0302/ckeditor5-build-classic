@@ -57,8 +57,7 @@ ClassicEditor.build = {
 		ParagraphPlugin,
 		ImageuploadPlugin,
         UcMediaPlugin,
-        AutoFormatPlugin,
-        Markdown  // Do not use until you want only markdown support
+        AutoFormatPlugin
 	],
 	config: {
 		toolbar: {
@@ -68,12 +67,16 @@ ClassicEditor.build = {
                 'italic',
                 'underline',
 				'code',
+				'|',
+                'blockQuote',
 				'link',
+				'|',
 				'bulletedList',
 				'numberedList',
-				'blockQuote',
+				'|',
 				'undo',
 				'redo',
+				'|',
 				'ucMedia'
 			]
 		},
