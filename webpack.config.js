@@ -51,14 +51,13 @@ module.exports = {
 				test: /\.scss$/,
 				use: [
 					'style-loader',
-					{
-						loader: 'css-loader',
-						options: {
-							minimize: true,
+					'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
                             data: `@import 'theme/style.scss';`
-						}
-					},
-					'sass-loader'
+                        }
+                    }
 				]
 			}
 		]
