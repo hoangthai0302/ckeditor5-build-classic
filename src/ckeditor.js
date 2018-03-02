@@ -32,7 +32,9 @@ function Markdown( editor ) {
 }
 
 /* Ucraft Plugins */
-import UcMediaPlugin from '../plugins/media/plugin';
+import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
+import UcColorPlugin from '../plugins/uccolor/src/uccolor';
+
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -57,7 +59,8 @@ ClassicEditor.build = {
 		ParagraphPlugin,
 		ImageuploadPlugin,
         UcMediaPlugin,
-        AutoFormatPlugin
+        AutoFormatPlugin,
+        UcColorPlugin
 	],
 	config: {
 		toolbar: {
@@ -77,7 +80,8 @@ ClassicEditor.build = {
 				'undo',
 				'redo',
 				'|',
-				'ucMedia'
+				'ucMedia',
+                'ucColor'
 			]
 		},
 		image: {
