@@ -38,6 +38,8 @@ import UcColorPlugin from '../plugins/uccolor/src/uccolor';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
+import '../theme/style.scss';
+
 ClassicEditor.build = {
 	plugins: [
 		EssentialsPlugin,

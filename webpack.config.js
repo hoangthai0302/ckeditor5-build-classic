@@ -54,7 +54,8 @@ module.exports = {
 					{
 						loader: 'css-loader',
 						options: {
-							minimize: true
+							minimize: true,
+                            data: `@import 'theme/style.scss';`
 						}
 					},
 					'sass-loader'
