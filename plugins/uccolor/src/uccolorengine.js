@@ -12,29 +12,33 @@ export default class ColorEngine extends Plugin {
 		const editing = editor.editing;
 
         editor.document.schema.allow( { name: '$inline', attributes: 'textColor', inside: '$block' } );
-
+        // Temporary workaround. See https://github.com/ckeditor/ckeditor5/issues/477.
+        editor.document.schema.allow( { name: '$inline', attributes: 'textColor', inside: '$clipboardHolder' } );
 
         // Build converter from model to view for data and editing pipelines.
         buildModelConverter().for( data.modelToView, editing.modelToView )
             .fromAttribute( 'textColor' )
             .toElement( color => {
-                const colorElement = new UcColorElement( 'uccolor', {
+                const colorElement = new UcColorElement( 'font', {
                     style: `color: ${ color }`
                 });
                 return colorElement;
             });
 
-
-        // Build converter from view to model for data pipeline.
-        buildViewConverter().for( data.viewToModel )
-            .fromElement( 'uccolor' )
-            .consuming( { attribute: [ 'style' ] } )
+        buildViewConverter()
+            .for( data.viewToModel )
+            .fromElement('font')
+            .fromAttribute( 'style', /color/ )
             .toAttribute( viewElement => {
                 const color = viewElement.getStyle( 'color' );
-                if (color) {
-                    return { key: 'textColor', value: viewElement.getStyle( 'color' ) }
+
+                // Do not convert empty, default or unknown alignment values.
+                if ( !color ) {
+                    return;
                 }
-            });
+
+                return { key: 'textColor', value: color };
+            } );
 
 		editor.commands.add( 'ucColor', new UcColorCommand( editor, 'textColor' ) );
 	}
