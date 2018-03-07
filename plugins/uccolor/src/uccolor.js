@@ -51,7 +51,7 @@ export default class UcColorColor extends Plugin {
             const view = new ButtonView(locale);
 
             view.set({
-                label: 'Select image from Media Manager',
+                label: 'Select Color',
                 tooltip: true,
                 icon: ucColorPickerIcon
             });
