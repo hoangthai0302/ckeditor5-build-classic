@@ -34,6 +34,7 @@ function Markdown( editor ) {
 /* Ucraft Plugins */
 import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
 import UcColorPlugin from '../plugins/uccolor/src/uccolor';
+import UcLinkPlugin from '../plugins/uclink/src/uclink';
 
 
 export default class ClassicEditor extends ClassicEditorBase {}
@@ -56,13 +57,14 @@ ClassicEditor.build = {
 		ImagecaptionPlugin,
 		ImagestylePlugin,
 		ImagetoolbarPlugin,
-		LinkPlugin,
+		// LinkPlugin,
 		ListPlugin,
 		ParagraphPlugin,
 		ImageuploadPlugin,
         UcMediaPlugin,
         AutoFormatPlugin,
-        UcColorPlugin
+        UcColorPlugin,
+        UcLinkPlugin
 	],
 	config: {
 		toolbar: {
@@ -74,7 +76,9 @@ ClassicEditor.build = {
 				'code',
 				'|',
                 'blockQuote',
-				'link',
+				// 'link',
+				'ucLink',
+                'ucUnlink',
 				'|',
 				'bulletedList',
 				'numberedList',
