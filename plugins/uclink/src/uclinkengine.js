@@ -56,13 +56,28 @@ export default class LinkEngine extends Plugin {
         buildModelConverter().for( data.modelToView, editing.modelToView )
             .fromAttribute( 'linkRel' )
             .toElement( linkRel => {
-                const linkElement = new LinkElement( 'a', { href: linkRel } );
-
-                // https://github.com/ckeditor/ckeditor5-link/issues/121
+                const linkElement = new LinkElement( 'a', { rel: linkRel } );
                 linkElement.priority = 5;
-
                 return linkElement;
             } );
+
+        buildModelConverter().for( data.modelToView, editing.modelToView )
+            .fromAttribute( 'linkTarget' )
+            .toElement( linkTarget => {
+                const linkElement = new LinkElement( 'a', { target: linkTarget } );
+                linkElement.priority = 5;
+                return linkElement;
+            } );
+
+        buildModelConverter().for( data.modelToView, editing.modelToView )
+            .fromAttribute( 'linkUnderline' )
+            .toElement( linkUnderline => {
+                const linkElement = new LinkElement( 'a', {
+                    style: `text-decoration: ${ linkUnderline }`
+                } );
+                linkElement.priority = 5;
+                return linkElement;
+            });
 
 		// Build converter from view to model for data pipeline.
 		buildViewConverter().for( data.viewToModel )
@@ -73,6 +88,34 @@ export default class LinkEngine extends Plugin {
 				value: viewElement.getAttribute( 'href' )
 			} ) );
 
+        buildViewConverter().for( data.viewToModel )
+            .from( { name: 'a', attribute: { rel: /.?/ } } )
+            .toAttribute( viewElement => ( {
+                key: 'linkRel',
+                value: viewElement.getAttribute( 'rel' )
+            } ) );
+
+        buildViewConverter().for( data.viewToModel )
+            .from( { name: 'a', attribute: { target: /.?/ } } )
+            .toAttribute( viewElement => ( {
+                key: 'linkTarget',
+                value: viewElement.getAttribute( 'target' )
+            } ) );
+
+        buildViewConverter()
+            .for( data.viewToModel )
+            .fromElement('a')
+            .fromAttribute( 'style', /text-decoration/ )
+            .toAttribute( viewElement => {
+                const underline = viewElement.getStyle( 'text-decoration' );
+
+                // Do not convert empty, default or unknown alignment values.
+                if ( !underline ) {
+                    return;
+                }
+
+                return { key: 'linkUnderline', value: underline };
+            } );
 		// Create linking commands.
 		editor.commands.add( 'ucLink', new LinkCommand( editor ) );
 		editor.commands.add( 'ucUnlink', new UnlinkCommand( editor ) );
