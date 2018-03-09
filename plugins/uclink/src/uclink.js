@@ -119,16 +119,16 @@ export default class Link extends Plugin {
 	_attachActions() {
 		const viewDocument = this.editor.editing.view;
 
-		// Handle click on view document and show panel when selection is placed inside the link element.
-		// Keep panel open until selection will be inside the same link element.
-		this.listenTo( viewDocument, 'click', () => {
-			const parentLink = this._getSelectedLinkElement();
-
-			if ( parentLink ) {
-				// Then show panel but keep focus inside editor editable.
-				this._showPanel();
-			}
-		} );
+		// // Handle click on view document and show panel when selection is placed inside the link element.
+		// // Keep panel open until selection will be inside the same link element.
+		// this.listenTo( viewDocument, 'click', () => {
+		// 	const parentLink = this._getSelectedLinkElement();
+        //
+		// 	if ( parentLink ) {
+		// 		// Then show panel but keep focus inside editor editable.
+		// 		this._showPanel();
+		// 	}
+		// } );
 
 		// Close the panel on the Esc key press when the editable has focus and the panel is visible.
 		this.editor.keystrokes.set( 'Esc', ( data, cancel ) => {

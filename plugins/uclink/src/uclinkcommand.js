@@ -36,7 +36,17 @@ export default class LinkCommand extends Command {
         this.linkRel = doc.selection.getAttribute( 'linkRel' );
         this.linkTarget = doc.selection.getAttribute( 'linkTarget' );
         this.linkUnderline = doc.selection.getAttribute( 'linkUnderline' );
-		this.isEnabled = doc.schema.checkAttributeInSelection( doc.selection, 'linkHref' );
+
+        // enabled if any selection is done
+        this.isEnabled = !doc.selection.isCollapsed;
+
+        if (this.isEnabled) {
+            this.isEnabled = doc.schema.checkAttributeInSelection(doc.selection, 'linkHref');
+        }
+
+		if (this.isEnabled) {
+            this.isEnabled = !this.editor.document.selection.hasAttribute('linkHref');
+        }
 	}
 
 	execute( data ) {
