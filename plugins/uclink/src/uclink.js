@@ -19,6 +19,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 import LinkFormView from './ui/linkformview';
 
 import linkIcon from '../theme/icons/link.svg';
+import unlinkIcon from '../theme/icons/unlink.svg';
 import '../theme/theme.scss';
 
 const linkKeystroke = 'Ctrl+K';
@@ -56,6 +57,7 @@ export default class Link extends Plugin {
 	_createToolbarLinkButton() {
 		const editor = this.editor;
 		const linkCommand = editor.commands.get( 'ucLink' );
+        const unlinkCommand = editor.commands.get( 'ucUnlink' );
 		const t = editor.t;
 
 		// Handle the `Ctrl+K` keystroke and show the panel.
@@ -87,6 +89,25 @@ export default class Link extends Plugin {
             button.template.attributes.class.push('ck-uclink');
             return button;
 		} );
+
+        editor.ui.componentFactory.add( 'ucUnlink', locale => {
+            const button = new ButtonView( locale );
+
+            button.isEnabled = false;
+            button.label = t( 'ucUnlink' );
+            button.icon = unlinkIcon;
+            button.tooltip = true;
+
+            // Bind button to the command.
+            button.bind( 'isEnabled' ).to( unlinkCommand, 'isEnabled' );
+
+            // Show the panel on button click.
+            this.listenTo( button, 'execute', () => editor.execute( 'ucUnlink' ) );
+
+            // add uci-delete class
+            button.template.attributes.class.push('ck-ucunlink');
+            return button;
+        } );
 	}
 
 	/**
