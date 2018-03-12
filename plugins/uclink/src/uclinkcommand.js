@@ -33,9 +33,6 @@ export default class LinkCommand extends Command {
 		const doc = this.editor.document;
 
 		this.linkHref = doc.selection.getAttribute( 'linkHref' );
-        this.linkRel = doc.selection.getAttribute( 'linkRel' );
-        this.linkTarget = doc.selection.getAttribute( 'linkTarget' );
-        this.linkUnderline = doc.selection.getAttribute( 'linkUnderline' );
 
         // enabled if any selection is done
         this.isEnabled = !doc.selection.isCollapsed;
@@ -65,10 +62,7 @@ export default class LinkCommand extends Command {
 				if ( selection.hasAttribute( 'linkHref' ) ) {
 					// Then update `linkHref` value.
 					const linkRange = findLinkRange( selection.getFirstPosition(), selection.getAttribute( 'linkHref' ) );
-					batch.setAttribute( linkRange, 'linkHref', data.linkHref );
-                    batch.setAttribute( linkRange, 'linkRel', data.linkRel );
-                    batch.setAttribute( linkRange, 'linkTarget', data.linkTarget );
-                    batch.setAttribute( linkRange, 'linkUnderline', data.linkUnderline );
+                    batch.setAttribute( linkRange, 'linkHref', data.linkHref );
 
 					// Create new range wrapping changed link.
 					selection.setRanges( [ linkRange ] );
@@ -80,9 +74,6 @@ export default class LinkCommand extends Command {
 
 				for ( const range of ranges ) {
                     batch.setAttribute( range, 'linkHref', data.linkHref );
-                    batch.setAttribute( range, 'linkRel', data.linkRel );
-                    batch.setAttribute( range, 'linkTarget', data.linkTarget );
-                    batch.setAttribute( range, 'linkUnderline', data.linkUnderline );
 				}
 			}
 		} );

@@ -185,7 +185,7 @@ export default class Link extends Plugin {
                 editor.execute( 'ucLink', data );
 			}
 		};
-        editor.owner.openLinkDialog(fakeEvent, fakeTarget, editor.owner, data, callbacks);
+        editor.owner.openLinkDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callbacks);
         editor.isUcLinkDialogOpened = true;
 	}
 
