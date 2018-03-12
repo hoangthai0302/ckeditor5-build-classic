@@ -16,5 +16,5 @@ import AttributeElement from '@ckeditor/ckeditor5-engine/src/view/attributeeleme
  *
  * @extends module:engine/view/attributelement~AttributeElement
  */
-export default class LinkElement extends AttributeElement {
+export default class UcLinkElement extends AttributeElement {
 }

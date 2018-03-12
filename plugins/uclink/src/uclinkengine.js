@@ -3,25 +3,14 @@
  * For licensing, see LICENSE.md.
  */
 
-/**
- * @module link/linkengine
- */
-
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import buildModelConverter from '@ckeditor/ckeditor5-engine/src/conversion/buildmodelconverter';
 import buildViewConverter from '@ckeditor/ckeditor5-engine/src/conversion/buildviewconverter';
-import LinkElement from './uclinkelement';
-import LinkCommand from './uclinkcommand';
+import UcLinkElement from './uclinkelement';
+import UcLinkCommand from './uclinkcommand';
 import UnlinkCommand from './ucunlinkcommand';
 
-/**
- * The link engine feature.
- *
- * It introduces the `linkHref="url"` attribute in the model which renders to the view as a `<a href="url">` element.
- *
- * @extends module:core/plugin~Plugin
- */
-export default class LinkEngine extends Plugin {
+export default class UcLinkEngine extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
@@ -38,7 +27,7 @@ export default class LinkEngine extends Plugin {
 		buildModelConverter().for( data.modelToView, editing.modelToView )
 			.fromAttribute( 'linkHref' )
 			.toElement( linkHref => {
-				const linkElement = new LinkElement( 'a', { href: linkHref } );
+				const linkElement = new UcLinkElement( 'a', { href: linkHref } );
 				linkElement.priority = 5;
 
 				return linkElement;
@@ -55,7 +44,7 @@ export default class LinkEngine extends Plugin {
             } ) );
 
         // Create linking commands.
-		editor.commands.add( 'ucLink', new LinkCommand( editor ) );
+		editor.commands.add( 'ucLink', new UcLinkCommand( editor ) );
 		editor.commands.add( 'ucUnlink', new UnlinkCommand( editor ) );
 	}
 }

@@ -13,18 +13,14 @@ import Range from '@ckeditor/ckeditor5-engine/src/view/range';
 import LinkEngine from './uclinkengine';
 import LinkElement from './uclinkelement';
 
-import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
-
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-import LinkFormView from './ui/linkformview';
 
 import linkIcon from '../theme/icons/link.svg';
 import unlinkIcon from '../theme/icons/unlink.svg';
-import '../theme/theme.scss';
 
 const linkKeystroke = 'Ctrl+K';
 
-export default class Link extends Plugin {
+export default class UcLink extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
@@ -204,17 +200,6 @@ export default class Link extends Plugin {
 		this.stopListening( this.editor.editing.view, 'render' );
 	}
 
-	/**
-	 * Returns the {@link module:link/linkelement~LinkElement} under
-	 * the {@link module:engine/view/document~Document editing view's} selection or `null`
-	 * if there is none.
-	 *
-	 * **Note**: For a non–collapsed selection the `LinkElement` is only returned when **fully**
-	 * selected and the **only** element within the selection boundaries.
-	 *
-	 * @private
-	 * @returns {module:link/linkelement~LinkElement|null}
-	 */
 	_getSelectedLinkElement() {
 		const selection = this.editor.editing.view.selection;
 

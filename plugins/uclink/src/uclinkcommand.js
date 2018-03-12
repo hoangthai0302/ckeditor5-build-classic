@@ -8,7 +8,6 @@
  */
 
 import Command from '@ckeditor/ckeditor5-core/src/command';
-import Text from '@ckeditor/ckeditor5-engine/src/model/text';
 import Range from '@ckeditor/ckeditor5-engine/src/model/range';
 import findLinkRange from './finduclinkrange';
 
@@ -17,7 +16,7 @@ import findLinkRange from './finduclinkrange';
  *
  * @extends module:core/command~Command
  */
-export default class LinkCommand extends Command {
+export default class UcLinkCommand extends Command {
 	/**
 	 * The value of the `'linkHref'` attribute if the start of the selection is located in a node with this attribute.
 	 *

@@ -10,11 +10,6 @@
 import Command from '@ckeditor/ckeditor5-core/src/command';
 import findLinkRange from './finduclinkrange';
 
-/**
- * The unlink command. It is used by the {@link module:link/link~Link link plugin}.
- *
- * @extends module:core/command~Command
- */
 export default class UnlinkCommand extends Command {
 	/**
 	 * @inheritDoc
