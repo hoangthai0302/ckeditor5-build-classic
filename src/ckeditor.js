@@ -32,7 +32,6 @@ function Markdown( editor ) {
 
 /* Ucraft Plugins */
 import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
-import UcColorPlugin from '../plugins/uccolor/src/uccolor';
 import UcLinkPlugin from '../plugins/uclink/src/uclink';
 
 
@@ -62,7 +61,6 @@ ClassicEditor.build = {
 		ImageuploadPlugin,
         UcMediaPlugin,
         AutoFormatPlugin,
-        UcColorPlugin,
         UcLinkPlugin
 	],
 	config: {
@@ -85,8 +83,7 @@ ClassicEditor.build = {
 				'undo',
 				'redo',
 				'|',
-				'ucMedia',
-                'ucColor'
+				'ucMedia'
 			]
 		},
 		image: {
