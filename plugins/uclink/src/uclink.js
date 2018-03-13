@@ -70,7 +70,7 @@ export default class UcLink extends Plugin {
 			const button = new ButtonView( locale );
 
 			button.isEnabled = true;
-			button.label = t( 'ucLink' );
+			button.label = 'Link';
 			button.icon = linkIcon;
 			button.keystroke = linkKeystroke;
 			button.tooltip = true;
@@ -90,7 +90,7 @@ export default class UcLink extends Plugin {
             const button = new ButtonView( locale );
 
             button.isEnabled = false;
-            button.label = t( 'ucUnlink' );
+            button.label = 'Unlink';
             button.icon = unlinkIcon;
             button.tooltip = true;
 
@@ -175,7 +175,6 @@ export default class UcLink extends Plugin {
 
         const callbacks = {
         	cancel() {
-				alert('cancel');
 			},
 			save(data) {
                 editor.execute( 'ucLink', data );
