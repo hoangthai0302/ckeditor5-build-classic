@@ -8,7 +8,6 @@ $custom-background: #ffffff;
 $custom-foreground: #8c8c85;
 $custom-border: #f1f1eb;
 $custom-white: #fff;
-$ck-def-spacing: 12px !default;
 // Colors used by the ck-color() mixin across the theme.
 $ck-colors: (
     // Overrides the default focus color used by the ck-focus-ring() mixin.
@@ -98,6 +97,17 @@ $ck-colors: (
         box-shadow: none;
     }
 }
-.ck-editor__editable_inline {
+
+.ck-editor__editable .image.image-style-side {
+    margin-left: 32px;
+}
+.ck-editor__editable .image.image-style-align-left {
+    margin-right: 32px;
+}
+.ck-editor__editable .image.image-style-align-right {
+    margin-left: 32px;
+}
+
+.ck-editor__editable_inline{
     padding: 12px;
 }
