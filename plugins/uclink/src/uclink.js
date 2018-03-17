@@ -168,10 +168,6 @@ export default class UcLink extends Plugin {
         const fakeEvent = document.createEvent('MouseEvent');
         const fakeTarget = document.querySelector('.ck-uclink');
         const data = {};
-        data.href = unlinkCommand.linkHref;
-        data.underline = unlinkCommand.linkUnderline;
-        data.rel = unlinkCommand.linkRel;
-        data.target = unlinkCommand.linkTarget;
 
         const callbacks = {
         	cancel() {
@@ -196,6 +192,7 @@ export default class UcLink extends Plugin {
 		}
 
         this.editor.isUcLinkDialogOpened = false;
+        this.editor.owner.closeLinkDialog(this.editor.owner);
 		this.stopListening( this.editor.editing.view, 'render' );
 	}
 
