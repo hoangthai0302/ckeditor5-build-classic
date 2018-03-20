@@ -97,7 +97,6 @@ export default class UcColorColor extends Plugin {
         }
 
         this.editor.isUcColorDialogOpened = false;
-        this.editor.owner.closeColorDialog(this.editor.owner);
         this.stopListening( this.editor.editing.view, 'render' );
     }
 
