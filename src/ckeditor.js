@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
@@ -9,8 +9,6 @@ import UploadadapterPlugin from '@ckeditor/ckeditor5-adapter-ckfinder/src/upload
 import AutoformatPlugin from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import BoldPlugin from '@ckeditor/ckeditor5-basic-styles/src/bold';
 import ItalicPlugin from '@ckeditor/ckeditor5-basic-styles/src/italic';
-import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
-import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
 import BlockquotePlugin from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import EasyimagePlugin from '@ckeditor/ckeditor5-easy-image/src/easyimage';
 import HeadingPlugin from '@ckeditor/ckeditor5-heading/src/heading';
@@ -18,27 +16,13 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
 import ImagecaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImagestylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImagetoolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
+import ImageuploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
+import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import ImageuploadPlugin from '@ckeditor/ckeditor5-upload/src/imageupload';
-import AutoFormatPlugin from '@ckeditor/ckeditor5-autoformat/src/autoformat';
-import GFMDataProcessor from '@ckeditor/ckeditor5-markdown-gfm/src/gfmdataprocessor';
-
-
-// Simple plugin which loads the data processor.
-function Markdown( editor ) {
-    editor.data.processor = new GFMDataProcessor();
-}
-
-/* Ucraft Plugins */
-import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
-import UcLinkPlugin from '../plugins/uclink/src/uclink';
-import UcColorPlugin from '../plugins/uccolor/src/uccolor';
-
+import Imageupload1Plugin from '@ckeditor/ckeditor5-image/src/imageupload';
 
 export default class ClassicEditor extends ClassicEditorBase {}
-
-import '../theme/style.scss';
 
 ClassicEditor.build = {
 	plugins: [
@@ -47,8 +31,6 @@ ClassicEditor.build = {
 		AutoformatPlugin,
 		BoldPlugin,
 		ItalicPlugin,
-        UnderlinePlugin,
-        CodePlugin,
 		BlockquotePlugin,
 		EasyimagePlugin,
 		HeadingPlugin,
@@ -56,63 +38,36 @@ ClassicEditor.build = {
 		ImagecaptionPlugin,
 		ImagestylePlugin,
 		ImagetoolbarPlugin,
-		// LinkPlugin,
+		ImageuploadPlugin,
+		LinkPlugin,
 		ListPlugin,
 		ParagraphPlugin,
-		ImageuploadPlugin,
-        UcMediaPlugin,
-        AutoFormatPlugin,
-        UcLinkPlugin,
-        UcColorPlugin
+		Imageupload1Plugin
 	],
 	config: {
 		toolbar: {
 			items: [
-				'headings',
-                'bold',
-                'italic',
-                'underline',
-				'code',
+				'heading',
 				'|',
-                'blockQuote',
-				// 'link',
-				'ucLink',
-                'ucUnlink',
-				'|',
+				'bold',
+				'italic',
+				'link',
 				'bulletedList',
 				'numberedList',
-				'|',
+				'imageUpload',
+				'blockQuote',
 				'undo',
-				'redo',
-				'|',
-				'ucMedia',
-                'ucColor'
+				'redo'
 			]
 		},
 		image: {
-            toolbar: [ 'imageTextAlternative', '|', 'imageStyleAlignLeft', 'imageStyleFull', 'imageStyleAlignRight' ],
-
-            styles: [
-                // This option is equal to a situation where no style is applied.
-                'imageStyleFull',
-
-                // This represents an image aligned to left.
-                'imageStyleAlignLeft',
-
-                // This represents an image aligned to right.
-                'imageStyleAlignRight'
-            ]
+			toolbar: [
+				'imageStyle:full',
+				'imageStyle:side',
+				'|',
+				'imageTextAlternative'
+			]
 		},
-        heading:  {
-            options: [
-                { modelElement: 'paragraph', title: 'P', class: 'ck-heading_paragraph' },
-                { modelElement: 'heading1', viewElement: 'h1', title: 'H1', class: 'ck-heading_heading1' },
-                { modelElement: 'heading2', viewElement: 'h2', title: 'H2', class: 'ck-heading_heading2' },
-                { modelElement: 'heading3', viewElement: 'h3', title: 'H3', class: 'ck-heading_heading3' },
-                { modelElement: 'heading4', viewElement: 'h4', title: 'H4', class: 'ck-heading_heading4' },
-                { modelElement: 'heading5', viewElement: 'h5', title: 'H5', class: 'ck-heading_heading5' },
-                { modelElement: 'heading6', viewElement: 'h6', title: 'H6', class: 'ck-heading_heading6' }
-            ]
-        }
+		language: 'en'
 	}
 };

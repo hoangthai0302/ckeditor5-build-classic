@@ -1,5 +1,5 @@
 /**
- * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md.
  */
 
@@ -9,57 +9,65 @@
 
 const path = require( 'path' );
 const webpack = require( 'webpack' );
-const { bundler } = require( '@ckeditor/ckeditor5-dev-utils' );
+const { bundler, styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 const CKEditorWebpackPlugin = require( '@ckeditor/ckeditor5-dev-webpack-plugin' );
 const BabiliPlugin = require( 'babel-minify-webpack-plugin' );
 const buildConfig = require( './build-config' );
 
 module.exports = {
-	devtool: 'source-map',
+    devtool: 'source-map',
 
-	entry: path.resolve( __dirname, 'src', 'ckeditor.js' ),
+    entry: path.resolve( __dirname, 'src', 'ckeditor.js' ),
 
-	output: {
-		path: path.resolve( __dirname, 'build' ),
-		filename: 'ckeditor.js',
-		libraryTarget: 'umd',
-		libraryExport: 'default',
-		library: buildConfig.moduleName
-	},
+    output: {
+        path: path.resolve( __dirname, 'build' ),
+        filename: 'ckeditor.js',
+        libraryTarget: 'umd',
+        libraryExport: 'default',
+        library: buildConfig.moduleName
+    },
 
-	plugins: [
-		new CKEditorWebpackPlugin( {
-			languages: [ buildConfig.language ]
-		} ),
-		new BabiliPlugin( null, {
-			comments: false
-		} ),
-		new webpack.BannerPlugin( {
-			banner: bundler.getLicenseBanner(),
-			raw: true
-		} ),
-		new webpack.optimize.ModuleConcatenationPlugin()
-	],
+    plugins: [
+        new CKEditorWebpackPlugin( {
+            language: buildConfig.config.language,
+            additionalLanguages: 'all'
+        } ),
+        new BabiliPlugin( null, {
+            comments: false
+        } ),
+        new webpack.BannerPlugin( {
+            banner: bundler.getLicenseBanner(),
+            raw: true
+        } ),
+        new webpack.optimize.ModuleConcatenationPlugin()
+    ],
 
-	module: {
-		rules: [
-			{
-				test: /\.svg$/,
-				use: [ 'raw-loader' ]
-			},
-			{
-				test: /\.scss$/,
-				use: [
-					'style-loader',
-					'css-loader',
+    module: {
+        rules: [
+            {
+                test: /\.svg$/,
+                use: [ 'raw-loader' ]
+            },
+            {
+                test: /\.css$/,
+                use: [
                     {
-                        loader: 'sass-loader',
+                        loader: 'style-loader',
                         options: {
-                            data: `@import 'theme/variables.scss';`
+                            singleton: true
                         }
-                    }
-				]
-			}
-		]
-	}
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: styles.getPostCssConfig( {
+                            themeImporter: {
+                                themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
+                            },
+                            minify: true
+                        } )
+                    },
+                ]
+            }
+        ]
+    }
 };
