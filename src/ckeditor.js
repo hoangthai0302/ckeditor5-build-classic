@@ -16,11 +16,13 @@ import ImagePlugin from '@ckeditor/ckeditor5-image/src/image';
 import ImagecaptionPlugin from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImagestylePlugin from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImagetoolbarPlugin from '@ckeditor/ckeditor5-image/src/imagetoolbar';
-import ImageuploadPlugin from '@ckeditor/ckeditor5-image/src/imageupload';
 import LinkPlugin from '@ckeditor/ckeditor5-link/src/link';
 import ListPlugin from '@ckeditor/ckeditor5-list/src/list';
 import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
-import Imageupload1Plugin from '@ckeditor/ckeditor5-image/src/imageupload';
+
+
+import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
+import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -38,11 +40,11 @@ ClassicEditor.build = {
 		ImagecaptionPlugin,
 		ImagestylePlugin,
 		ImagetoolbarPlugin,
-		ImageuploadPlugin,
 		LinkPlugin,
 		ListPlugin,
 		ParagraphPlugin,
-		Imageupload1Plugin
+        StrikethroughPlugin,
+        CodePlugin
 	],
 	config: {
 		toolbar: {
@@ -51,21 +53,33 @@ ClassicEditor.build = {
 				'|',
 				'bold',
 				'italic',
+				'strikethrough',
+				'code',
+				'|',
 				'link',
 				'bulletedList',
 				'numberedList',
-				'imageUpload',
 				'blockQuote',
 				'undo',
 				'redo'
 			]
 		},
 		image: {
-			toolbar: [
-				'imageStyle:full',
-				'imageStyle:side',
-				'|',
-				'imageTextAlternative'
+            toolbar: [ 'imageTextAlternative', '|', 'imageStyle:alignLeft', 'imageStyle:full', 'imageStyle:alignRight' ],
+            styles: [
+                'full',
+                'alignLeft',
+                'alignRight'
+            ]
+		},
+		heading: {
+            options: [
+            	{ model: 'paragraph', title: 'P', class: 'ck-heading_paragraph' },
+            	{ model: 'heading2', view: 'h2', title: 'H2', class: 'ck-heading_heading2' },
+            	{ model: 'heading3', view: 'h3', title: 'H3', class: 'ck-heading_heading3' },
+            	{ model: 'heading4', view: 'h4', title: 'H4', class: 'ck-heading_heading4' },
+                { model: 'heading5', view: 'h5', title: 'H5', class: 'ck-heading_heading5' },
+                { model: 'heading6', view: 'h6', title: 'H6', class: 'ck-heading_heading6' }
 			]
 		},
 		language: 'en'
