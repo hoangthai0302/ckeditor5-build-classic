@@ -54,5 +54,8 @@
     "create-entry-file": "node bin/create-entry-file.js",
     "build-ckeditor": "sh bin/build-ckeditor.sh",
     "preversion": "npm run build; if [ -n \"$(git status src/ckeditor.js build/ --porcelain)\" ]; then git add -u src/ckeditor.js build/ && git commit -m 'Internal: Build.'; fi"
+  },
+  "dependencies": {
+    "@ckeditor/ckeditor5-font": "^1.0.0-beta.1"
   }
 }

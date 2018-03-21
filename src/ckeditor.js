@@ -23,6 +23,8 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
+import FontPlugin from '@ckeditor/ckeditor5-font/src/font';
+
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -44,7 +46,8 @@ ClassicEditor.build = {
 		ListPlugin,
 		ParagraphPlugin,
         StrikethroughPlugin,
-        CodePlugin
+        CodePlugin,
+        FontPlugin
 	],
 	config: {
 		toolbar: {
@@ -55,6 +58,9 @@ ClassicEditor.build = {
 				'italic',
 				'strikethrough',
 				'code',
+				'|',
+                'fontFamily',
+				'fontSize',
 				'|',
 				'link',
 				'bulletedList',
@@ -82,6 +88,24 @@ ClassicEditor.build = {
                 { model: 'heading6', view: 'h6', title: 'H6', class: 'ck-heading_heading6' }
 			]
 		},
+        fontFamily: {
+            options: [
+                'default',
+                'Ubuntu, Arial, sans-serif',
+                'Ubuntu Mono, Courier New, Courier, monospace'
+            ]
+        },
+        fontSize: {
+            options: [
+                9,
+                11,
+                13,
+                'normal',
+                17,
+                19,
+                21
+            ]
+        },
 		language: 'en'
 	}
 };
