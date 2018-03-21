@@ -25,6 +25,10 @@ import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethro
 import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
 import FontPlugin from '@ckeditor/ckeditor5-font/src/font';
 
+/**
+ * Ucraft Plugins
+ */
+import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -47,7 +51,8 @@ ClassicEditor.build = {
 		ParagraphPlugin,
         StrikethroughPlugin,
         CodePlugin,
-        FontPlugin
+        FontPlugin,
+        UcMediaPlugin
 	],
 	config: {
 		toolbar: {
@@ -66,6 +71,8 @@ ClassicEditor.build = {
 				'bulletedList',
 				'numberedList',
 				'blockQuote',
+				'|',
+				'ucMedia',
 				'undo',
 				'redo'
 			]
