@@ -22,8 +22,11 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 
 
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
+import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
 import FontPlugin from '@ckeditor/ckeditor5-font/src/font';
+import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
+
 
 /**
  * Ucraft Plugins
@@ -50,8 +53,10 @@ ClassicEditor.build = {
 		ListPlugin,
 		ParagraphPlugin,
         StrikethroughPlugin,
+        UnderlinePlugin,
         CodePlugin,
         FontPlugin,
+        AlignmentPlugin,
         UcMediaPlugin
 	],
 	config: {
@@ -61,11 +66,17 @@ ClassicEditor.build = {
 				'|',
 				'bold',
 				'italic',
+				'underline',
 				'strikethrough',
 				'code',
 				'|',
                 'fontFamily',
 				'fontSize',
+				'|',
+                'alignment:left',
+				'alignment:right',
+				'alignment:center',
+				'alignment:justify',
 				'|',
 				'link',
 				'bulletedList',
