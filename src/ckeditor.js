@@ -32,6 +32,7 @@ import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
  * Ucraft Plugins
  */
 import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
+import UcLinkPlugin from '../plugins/uclink/src/uclink';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -49,7 +50,7 @@ ClassicEditor.build = {
 		ImagecaptionPlugin,
 		ImagestylePlugin,
 		ImagetoolbarPlugin,
-		LinkPlugin,
+		// LinkPlugin,
 		ListPlugin,
 		ParagraphPlugin,
         StrikethroughPlugin,
@@ -57,7 +58,8 @@ ClassicEditor.build = {
         CodePlugin,
         FontPlugin,
         AlignmentPlugin,
-        UcMediaPlugin
+        UcMediaPlugin,
+        UcLinkPlugin
 	],
 	config: {
 		toolbar: {
@@ -78,7 +80,8 @@ ClassicEditor.build = {
 				'alignment:center',
 				'alignment:justify',
 				'|',
-				'link',
+				'ucLink',
+                'ucUnlink',
 				'bulletedList',
 				'numberedList',
 				'blockQuote',
