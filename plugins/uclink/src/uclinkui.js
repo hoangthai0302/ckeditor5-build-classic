@@ -92,7 +92,6 @@ export default class UcLinkUI extends Plugin {
             button.isEnabled = true;
             button.label = t( 'UnLink' );
             button.icon = linkIcon;
-            button.keystroke = linkKeystroke;
             button.tooltip = true;
 
             // Bind button to the command.

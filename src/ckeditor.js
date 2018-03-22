@@ -33,6 +33,7 @@ import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
  */
 import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
 import UcLinkPlugin from '../plugins/uclink/src/uclink';
+import UcColorPlugin from '../plugins/uccolor/src/uccolor';
 
 export default class ClassicEditor extends ClassicEditorBase {}
 
@@ -59,7 +60,8 @@ ClassicEditor.build = {
         FontPlugin,
         AlignmentPlugin,
         UcMediaPlugin,
-        UcLinkPlugin
+        UcLinkPlugin,
+        UcColorPlugin
 	],
 	config: {
 		toolbar: {
@@ -87,6 +89,7 @@ ClassicEditor.build = {
 				'blockQuote',
 				'|',
 				'ucMedia',
+				'ucColor',
 				'undo',
 				'redo'
 			]
