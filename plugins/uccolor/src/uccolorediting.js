@@ -29,7 +29,7 @@ export default class UcColorEditing extends Plugin {
         const editor = this.editor;
         // Allow bold attribute on text nodes.
         editor.model.schema.extend( '$text', { allowAttributes: 'textColor' } );
-        editor.model.schema.extend( '$block', { allowAttributes: 'blockTextColor' } );
+        editor.model.schema.extend( '$block', { allowAttributes: 'textColor' } );
 
         // Build converter from model to view for data and editing pipelines.
 
@@ -41,12 +41,17 @@ export default class UcColorEditing extends Plugin {
                 }
             } ) );
 
+
         editor.conversion.for( 'downcast' )
             .add( downcastAttributeToAttribute( {
-                model: 'blockTextColor',
-                view: modelAttributeValue => ( { key: 'style', value: { color : modelAttributeValue } } )
+                model: 'textColor',
+                view: ( modelAttributeValue, data ) => {
+                    if ( data.item.is === undefined || data.item.is( 'textProxy' ) ) {
+                        return null;
+                    }
+                    return { key: 'style', value: { color: modelAttributeValue } };
+                }
             } ) );
-
 
         editor.conversion.for( 'upcast' )
             .add( upcastElementToAttribute( {
@@ -55,7 +60,9 @@ export default class UcColorEditing extends Plugin {
                 },
                 model: {
                     key: 'textColor',
-                    value: viewElement => viewElement.getStyle( 'color' )
+                    value: viewElement => {
+                        return viewElement.getStyle( 'color' );
+                    }
                 }
             } ) );
 
@@ -68,7 +75,7 @@ export default class UcColorEditing extends Plugin {
                     }
                 },
                 model: {
-                    key: 'blockTextColor',
+                    key: 'textColor',
                     value: viewElement => {
                         return viewElement.getStyle( 'color' );
                     }
@@ -76,7 +83,6 @@ export default class UcColorEditing extends Plugin {
             } ) );
 
         // Create bold command.
-        editor.commands.add( 'ucColor', new UcColorCommand( editor, 'blockTextColor' ) );
         editor.commands.add( 'ucColor', new UcColorCommand( editor, 'textColor' ) );
     }
 }

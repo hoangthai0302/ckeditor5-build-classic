@@ -18,7 +18,7 @@
     "@ckeditor/ckeditor5-autoformat": "^1.0.0-beta.1",
     "@ckeditor/ckeditor5-basic-styles": "^1.0.0-beta.1",
     "@ckeditor/ckeditor5-block-quote": "^1.0.0-beta.1",
-    "@ckeditor/ckeditor5-dev-utils": "^7.0.3",
+    "@ckeditor/ckeditor5-dev-utils": "^7.0.6",
     "@ckeditor/ckeditor5-dev-webpack-plugin": "^3.0.4",
     "@ckeditor/ckeditor5-easy-image": "^1.0.0-beta.1",
     "@ckeditor/ckeditor5-editor-classic": "^1.0.0-beta.1",
@@ -57,6 +57,7 @@
   },
   "dependencies": {
     "@ckeditor/ckeditor5-alignment": "^1.0.0-beta.1",
+    "@ckeditor/ckeditor5-engine": "github:ckeditor/ckeditor5-engine#master",
     "@ckeditor/ckeditor5-font": "^1.0.0-beta.1"
   }
 }
