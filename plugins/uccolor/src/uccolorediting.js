@@ -9,8 +9,8 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import UcColorCommand from './uccolorcommand';
-import {downcastAttributeToElement} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
-import {upcastElementToAttribute} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
+import {downcastAttributeToElement, downcastAttributeToAttribute} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
+import {upcastElementToAttribute, upcastAttributeToAttribute} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
 
 
 /**
@@ -29,6 +29,7 @@ export default class UcColorEditing extends Plugin {
         const editor = this.editor;
         // Allow bold attribute on text nodes.
         editor.model.schema.extend( '$text', { allowAttributes: 'textColor' } );
+        editor.model.schema.extend( '$block', { allowAttributes: 'blockTextColor' } );
 
         // Build converter from model to view for data and editing pipelines.
 
@@ -39,6 +40,13 @@ export default class UcColorEditing extends Plugin {
                     return viewWriter.createAttributeElement( 'font', { style: 'color:' + modelAttributeValue } );
                 }
             } ) );
+
+        editor.conversion.for( 'downcast' )
+            .add( downcastAttributeToAttribute( {
+                model: 'blockTextColor',
+                view: modelAttributeValue => ( { key: 'style', value: { color : modelAttributeValue } } )
+            } ) );
+
 
         editor.conversion.for( 'upcast' )
             .add( upcastElementToAttribute( {
@@ -51,7 +59,24 @@ export default class UcColorEditing extends Plugin {
                 }
             } ) );
 
+        editor.conversion.for( 'upcast' )
+            .add( upcastAttributeToAttribute( {
+                view: {
+                    key: 'style',
+                    value: {
+                        color:/[\S]+/
+                    }
+                },
+                model: {
+                    key: 'blockTextColor',
+                    value: viewElement => {
+                        return viewElement.getStyle( 'color' );
+                    }
+                }
+            } ) );
+
         // Create bold command.
+        editor.commands.add( 'ucColor', new UcColorCommand( editor, 'blockTextColor' ) );
         editor.commands.add( 'ucColor', new UcColorCommand( editor, 'textColor' ) );
     }
 }
