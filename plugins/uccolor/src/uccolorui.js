@@ -46,18 +46,17 @@ export default class UcColorUI extends Plugin {
 
             // Execute command.
             this.listenTo( view, 'execute', () => {
-                editor.execute( UCCOLOR, {textColor: 'red'});
-                // const fakeEvent = document.createEvent('MouseEvent');
-                // const fakeTarget = document.querySelector('.ck-uccolor');
-                // const data = {};
-                // data.color = command.textColor !== undefined ? command.textColor : '#353535';
-                //
-                // const callback = function(color) {
-                //     editor.execute( UCCOLOR, {textColor: color});
-                // };
-                //
-                // this.ucColorDialogOpened = true;
-                // editor.owner.openColorDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callback);
+                const fakeEvent = document.createEvent('MouseEvent');
+                const fakeTarget = document.querySelector('.ck-uccolor');
+                const data = {};
+                data.color = command.textColor !== undefined ? command.textColor : '#353535';
+
+                const callback = function(color) {
+                    editor.execute( UCCOLOR, {textColor: color});
+                };
+
+                this.ucColorDialogOpened = true;
+                editor.owner.openColorDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callback);
 			} );
 
             return view;
