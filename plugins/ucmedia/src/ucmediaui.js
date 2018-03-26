@@ -16,7 +16,7 @@ import imageIcon from '@ckeditor/ckeditor5-core/theme/icons/image.svg';
  *
  * @extends module:core/plugin~Plugin
  */
-export default class ImageUploadUI extends Plugin {
+export default class UcMediaUI extends Plugin {
     /**
      * @inheritDoc
      */

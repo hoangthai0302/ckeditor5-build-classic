@@ -1,0 +1,55 @@
+
+.ck-button:not(.ck-disabled):hover,
+.ck-button:not(.ck-disabled):focus,
+a.ck-button:not(.ck-disabled):hover,
+a.ck-button:not(.ck-disabled):focus{
+    cursor: pointer;
+}
+.ck-editor .ck-dropdown .ck-dropdown__button:hover{
+    background: transparent;
+}
+.ck-editor .ck-dropdown .ck-dropdown__panel {
+    border: none;
+    box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item {
+    cursor: pointer;
+    color: #4a4a4a;
+}
+.ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item:focus{
+    box-shadow: none;
+}
+.ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item.ck-list__item_active{
+        color: #ffffff;
+}
+
+.ck-editor .ck-dropdown:after {
+            border-color: #b4b4b0 #ffffff transparent;
+}
+
+.ck-editor .ck-editor__editable.ck-focused{
+    box-shadow: none;
+}
+
+.ck-editor .ck-editor__editable .image.image-style-side {
+    margin-left: 32px;
+}
+.ck-editor .ck-editor__editable .image.image-style-align-left {
+    margin-right: 32px;
+}
+.ck-editor .ck-editor__editable .image.image-style-align-right {
+    margin-left: 32px;
+}
+
+.ck-editor .ck-editor__editable_inline{
+    padding: 12px;
+}
+
+.ck-editor .ck-list__item {
+    min-width: 8em;
+}
+
+.ck-body .ck-input,.ck-input-text:focus{
+    box-shadow: none;
+}

@@ -10,7 +10,7 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
-import ucColorIcon from '../theme/icons/link.svg';
+import ucColorIcon from '../theme/icons/uccolor.svg';
 
 const UCCOLOR = 'ucColor';
 
