@@ -122,17 +122,9 @@ ClassicEditor.build = {
                 'Ubuntu Mono, Courier New, Courier, monospace'
             ]
         },
-        fontSize: {
-            options: [
-                9,
-                11,
-                13,
-                'normal',
-                17,
-                19,
-                21
-            ]
-        },
+    	fontSize: {
+        	options: [8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 48, 60, 72]
+    	},
 		language: 'en'
 	}
 };
