@@ -16,6 +16,7 @@ import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsid
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
 import linkIcon from '../theme/icons/link.svg';
+import unlinkIcon from '../theme/icons/unlink.svg';
 
 const linkKeystroke = 'Ctrl+K';
 
@@ -91,7 +92,7 @@ export default class UcLinkUI extends Plugin {
 
             button.isEnabled = true;
             button.label = t( 'UnLink' );
-            button.icon = linkIcon;
+            button.icon = unlinkIcon;
             button.tooltip = true;
 
             // Bind button to the command.
