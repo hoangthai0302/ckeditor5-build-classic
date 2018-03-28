@@ -44,5 +44,11 @@ export default class UcLinkCommand extends LinkCommand {
         if (this.isEnabled) {
             this.isEnabled = !doc.selection.hasAttribute('linkHref');
         }
+
+        if (!doc.selection.hasAttribute('linkHref') && doc.selection.isCollapsed) {
+            this.set( 'isVisible', true );
+        } else {
+            this.set( 'isVisible', this.isEnabled);
+        }
     }
 }

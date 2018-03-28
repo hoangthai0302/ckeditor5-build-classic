@@ -75,6 +75,7 @@ export default class UcLinkUI extends Plugin {
 
 			// Bind button to the command.
 			button.bind( 'isEnabled' ).to( ucLinkCommand, 'isEnabled' );
+            button.bind( 'isVisible' ).to( ucLinkCommand, 'isVisible' );
 
 			// Show the panel on button click.
 			this.listenTo( button, 'execute', () => this._showUI() );
@@ -96,7 +97,7 @@ export default class UcLinkUI extends Plugin {
             button.tooltip = true;
 
             // Bind button to the command.
-            button.bind( 'isEnabled' ).to( ucUnlinkCommand, 'isEnabled' );
+            button.bind( 'isVisible' ).to( ucUnlinkCommand, 'isEnabled' );
 
             // Show the panel on button click.
             this.listenTo( button, 'execute', () => {
