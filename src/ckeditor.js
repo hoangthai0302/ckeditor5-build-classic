@@ -24,7 +24,7 @@ import ParagraphPlugin from '@ckeditor/ckeditor5-paragraph/src/paragraph';
 import StrikethroughPlugin from '@ckeditor/ckeditor5-basic-styles/src/strikethrough';
 import UnderlinePlugin from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import CodePlugin from '@ckeditor/ckeditor5-basic-styles/src/code';
-import FontPlugin from '@ckeditor/ckeditor5-font/src/font';
+// import FontPlugin from '@ckeditor/ckeditor5-font/src/font';
 import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 
 
@@ -34,6 +34,7 @@ import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
 import UcLinkPlugin from '../plugins/uclink/src/uclink';
 import UcColorPlugin from '../plugins/uccolor/src/uccolor';
+import UcFontPlugin from '../plugins/ucfont/src/ucfont';
 
 import '../theme/variables.css';
 import '../theme/style.css';
@@ -60,7 +61,7 @@ ClassicEditor.build = {
         StrikethroughPlugin,
         UnderlinePlugin,
         CodePlugin,
-        FontPlugin,
+        UcFontPlugin,
         AlignmentPlugin,
         UcMediaPlugin,
         UcLinkPlugin,
