@@ -5,8 +5,18 @@ a.ck-button:not(.ck-disabled):hover,
 a.ck-button:not(.ck-disabled):focus{
     cursor: pointer;
 }
-.ck-editor .ck-dropdown .ck-dropdown__button:hover{
+.ck-editor .ck-dropdown .ck-dropdown__button:hover,
+.ck-editor .ck-dropdown .ck-dropdown__button:active{
     background: transparent;
+    box-shadow: none;
+}
+.ck-editor .ck-dropdown .ck-button.ck-on,
+a.ck-button.ck-on{
+    background: #ffffff;
+}
+.ck-editor .ck-dropdown .ck-dropdown__button:focus{
+    box-shadow: none;
+    border: none;
 }
 .ck-editor .ck-dropdown .ck-dropdown__panel {
     border: none;
@@ -21,11 +31,11 @@ a.ck-button:not(.ck-disabled):focus{
     box-shadow: none;
 }
 .ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item.ck-list__item_active{
-        color: #ffffff;
+    color: #ffffff;
 }
 
 .ck-editor .ck-dropdown:after {
-            border-color: #b4b4b0 #ffffff transparent;
+    border-color: #b4b4b0 #ffffff transparent;
 }
 
 .ck-editor .ck-editor__editable.ck-focused{
@@ -47,7 +57,7 @@ a.ck-button:not(.ck-disabled):focus{
 }
 
 .ck-editor .ck-list__item {
-    min-width: 8em;
+    min-width: 100%;
 }
 
 .ck-body .ck-input,.ck-input-text:focus{
