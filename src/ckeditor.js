@@ -34,6 +34,7 @@ import AlignmentPlugin from '@ckeditor/ckeditor5-alignment/src/alignment';
 import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
 import UcLinkPlugin from '../plugins/uclink/src/uclink';
 import UcColorPlugin from '../plugins/uccolor/src/uccolor';
+import UcTransformPlugin from '../plugins/uctransform/src/uctransform';
 
 import '../theme/variables.css';
 import '../theme/style.css';
@@ -64,7 +65,8 @@ ClassicEditor.build = {
         AlignmentPlugin,
         UcMediaPlugin,
         UcLinkPlugin,
-        UcColorPlugin
+        UcColorPlugin,
+        UcTransformPlugin
 	],
 	config: {
 		toolbar: {
@@ -94,7 +96,8 @@ ClassicEditor.build = {
 				'ucMedia',
 				'ucColor',
 				'undo',
-				'redo'
+				'redo',
+				'ucTransformUppercase'
 			]
 		},
 		image: {
