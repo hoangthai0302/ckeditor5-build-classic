@@ -26,10 +26,27 @@ a.ck-button.ck-on{
 .ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item {
     cursor: pointer;
     color: #4a4a4a;
+    font-size: 12px !important;
+    text-align: center;
+
 }
+
+.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label{
+    width: 3em;
+}
+
+.ck-editor .ck-font-size-dropdown{
+    margin-right: 0px;
+}
+
+.ck-editor .ck-font-size-dropdown .ck-dropdown__panel .ck-list__item{
+    padding: 3px 0;
+}
+
 .ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item:focus{
     box-shadow: none;
 }
+
 .ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item.ck-list__item_active{
     color: #ffffff;
 }
@@ -62,4 +79,17 @@ a.ck-button.ck-on{
 
 .ck-body .ck-input,.ck-input-text:focus{
     box-shadow: none;
+}
+
+.ck-dropdown.ck-heading-dropdown{
+    margin-right: 0;
+}
+
+.ck-sticky-panel__content .ck-toolbar{
+    padding: 0;
+}
+
+.ck-dropdown .ck-dropdown__panel .ck-list.ck-rounded-corners,
+.ck-rounded-corners .ck-dropdown .ck-dropdown__panel .ck-list{
+    border-radius: 0;
 }
