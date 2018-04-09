@@ -31,6 +31,11 @@ a.ck-button.ck-on{
 
 }
 
+.ck-editor__editable.ck-focused{
+    box-shadow: none!important;
+    border: none !important;
+}
+
 .ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label{
     width: 3em;
 }
@@ -71,6 +76,7 @@ a.ck-button.ck-on{
 
 .ck-editor .ck-editor__editable_inline{
     padding: 12px;
+    border: none;
 }
 
 .ck-editor .ck-list__item {
@@ -84,9 +90,13 @@ a.ck-button.ck-on{
 .ck-dropdown.ck-heading-dropdown{
     margin-right: 0;
 }
+.ck-sticky-panel__content{
+    border-bottom: 1px solid #f1f1eb;
 
+}
 .ck-sticky-panel__content .ck-toolbar{
     padding: 0;
+    border: none !important;
 }
 
 .ck-dropdown .ck-dropdown__panel .ck-list.ck-rounded-corners,
