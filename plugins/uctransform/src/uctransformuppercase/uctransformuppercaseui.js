@@ -4,7 +4,7 @@
  */
 
 /**
- * @module font/fontfamily/fontfamilyui
+ * @module uctransform/uctransformuppercase/uctransformuppercaseui
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
@@ -16,7 +16,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
  *
  * @extends module:core/plugin~Plugin
  */
-export default class FontFamilyUI extends Plugin {
+export default class UctransformUppercaseUI extends Plugin {
     /**
      * @inheritDoc
      */
@@ -24,7 +24,6 @@ export default class FontFamilyUI extends Plugin {
         const editor = this.editor;
         const t = editor.t;
 
-        // Setup `imageUpload` button.
         editor.ui.componentFactory.add( 'ucTransformUppercase', locale => {
             const view = new ButtonView( locale );
             const command = editor.commands.get( 'ucTransformUppercase' );

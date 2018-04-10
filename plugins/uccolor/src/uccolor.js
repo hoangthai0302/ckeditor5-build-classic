@@ -18,7 +18,7 @@ import UcColorUI from './uccolorui';
  *
  * @extends module:core/plugin~Plugin
  */
-export default class UcLink extends Plugin {
+export default class UcColor extends Plugin {
 	/**
 	 * @inheritDoc
 	 */

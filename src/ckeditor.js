@@ -35,6 +35,7 @@ import UcMediaPlugin from '../plugins/ucmedia/src/ucmedia';
 import UcLinkPlugin from '../plugins/uclink/src/uclink';
 import UcColorPlugin from '../plugins/uccolor/src/uccolor';
 import UcTransformPlugin from '../plugins/uctransform/src/uctransform';
+import UcLetterSpacingPlugin from '../plugins/ucletterspacing/src/ucletterspacing';
 
 import '../theme/variables.css';
 import '../theme/style.css';
@@ -66,7 +67,8 @@ ClassicEditor.build = {
         UcMediaPlugin,
         UcLinkPlugin,
         UcColorPlugin,
-        UcTransformPlugin
+        UcTransformPlugin,
+        UcLetterSpacingPlugin
 	],
 	config: {
 		toolbar: {
@@ -97,7 +99,8 @@ ClassicEditor.build = {
 				'ucColor',
 				'undo',
 				'redo',
-				'ucTransformUppercase'
+				'ucTransformUppercase',
+				'ucLetterSpacing'
 			]
 		},
 		image: {
