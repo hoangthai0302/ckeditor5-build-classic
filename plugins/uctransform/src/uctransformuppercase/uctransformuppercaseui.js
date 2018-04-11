@@ -9,7 +9,7 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-// import uppercaseIcon from '../../theme/icons/font-family.svg';
+import uppercaseIcon from '../../theme/icons/uctexttransformuppercase.svg';
 
 /**
  * The uctransform uppercase UI plugin. It introduces the `'uppercase'` button.
@@ -30,7 +30,7 @@ export default class UctransformUppercaseUI extends Plugin {
 
             view.set( {
                 label: t( 'Text Transform' ),
-                // icon: uppercaseIcon,
+                icon: uppercaseIcon,
                 tooltip: true
             } );
 
