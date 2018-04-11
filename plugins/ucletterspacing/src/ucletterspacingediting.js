@@ -19,10 +19,11 @@ export default class UcLetterSpacingEditing extends Plugin {
         editor.model.schema.extend( '$text', { allowAttributes: 'letterSpacing' } );
 
         // Build converter from model to view for data and editing pipelines.
-
         editor.conversion.for( 'downcast' )
             .add( downcastAttributeToElement( {
-                model: 'letterSpacing',
+                model: {
+                    key: 'letterSpacing'
+                },
                 view: ( modelAttributeValue, viewWriter ) => {
                     return viewWriter.createAttributeElement( 'span', { style: 'letter-spacing:' + modelAttributeValue + 'px' } );
                 }
@@ -31,12 +32,21 @@ export default class UcLetterSpacingEditing extends Plugin {
         editor.conversion.for( 'upcast' )
             .add( upcastElementToAttribute( {
                 view: {
-                    name: 'span'
+                    name: 'span',
+                    styles: {
+                        'letter-spacing': /[\S]+/
+                    }
                 },
                 model: {
                     key: 'letterSpacing',
                     value: viewElement => {
-                        return parseInt(viewElement.getStyle( 'letter-spacing' ));
+                        const letterSpacing = viewElement.getStyle( 'letter-spacing' );
+
+                        if (letterSpacing === undefined) {
+                            return null;
+                        }
+
+                        return letterSpacing.substr( 0, letterSpacing.length - 2 );
                     }
                 }
             } ) );

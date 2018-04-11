@@ -31,7 +31,10 @@ export default class UcLineHeightEditing extends Plugin {
         editor.conversion.for( 'upcast' )
             .add( upcastElementToAttribute( {
                 view: {
-                    name: 'span'
+                    name: 'span',
+                    styles: {
+                        'line-height': /[\S]+/
+                    }
                 },
                 model: {
                     key: 'lineHeight',

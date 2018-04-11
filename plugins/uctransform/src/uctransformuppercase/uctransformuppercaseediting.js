@@ -56,6 +56,9 @@ export default class UctransformUppercaseEditing extends Plugin {
             .add( upcastElementToAttribute( {
                 view: {
                     name: 'span',
+                    styles: {
+                        'text-transform': /[\S]+/
+                    }
                 },
                 model: {
                     key: UC_TRANSFORM_UPPERCASE,
