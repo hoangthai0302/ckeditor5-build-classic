@@ -4,22 +4,22 @@
  */
 
 /**
- * @module ucletterspacing/ucletterspacingui
+ * @module uclineheight/uclineheightui
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
-import ucLetterSpacingIcon from '../theme/icons/ucletterspacing.svg';
+import ucLineHeightIcon from '../theme/icons/uclineheight.svg';
 
-const UC_LETTER_SPACING = 'ucLetterSpacing';
+const UC_LINE_HEIGHT = 'ucLineHeight';
 
 /**
  * The bold UI feature. It introduces the Bold button.
  *
  * @extends module:core/plugin~Plugin
  */
-export default class UcLetterSpacingUI extends Plugin {
+export default class UcLineHeightUI extends Plugin {
     /**
      * @inheritDoc
      */
@@ -28,35 +28,35 @@ export default class UcLetterSpacingUI extends Plugin {
         const t = editor.t;
 
         // Add bold button to feature components.
-        editor.ui.componentFactory.add( UC_LETTER_SPACING, locale => {
-            const command = editor.commands.get( UC_LETTER_SPACING );
-            const view = new ButtonView( UC_LETTER_SPACING );
+        editor.ui.componentFactory.add( UC_LINE_HEIGHT, locale => {
+            const command = editor.commands.get( UC_LINE_HEIGHT );
+            const view = new ButtonView( UC_LINE_HEIGHT );
 
             view.set( {
-                label: t( 'Letter Spacing' ),
-                icon: ucLetterSpacingIcon,
+                label: t( 'Line Height' ),
+                icon: ucLineHeightIcon,
                 tooltip: true
             } );
 
             view.bind( 'isOn', 'isEnabled' ).to( command, 'value', 'isEnabled' );
 
-            // add ck-uc-letter-spacing class
-            view.template.attributes.class.push('ck-uc-letter-spacing');
+            // add ck-uc-line-height class
+            view.template.attributes.class.push('ck-uc-line-height');
 
 
             // Execute command.
             this.listenTo( view, 'execute', () => {
                 const fakeEvent = document.createEvent('MouseEvent');
-                const fakeTarget = document.querySelector('.ck-uc-letter-spacing');
+                const fakeTarget = document.querySelector('.ck-uc-line-height');
                 const data = {};
-                data.letterSpacing = command.letterSpacing !== undefined ? command.letterSpacing : 0;
+                data.lineHeight = command.lineHeight !== undefined ? command.lineHeight : 1;
 
-                const callback = function(letterSpacing) {
-                    editor.execute( UC_LETTER_SPACING, {letterSpacing: letterSpacing});
+                const callback = function(lineHeight) {
+                    editor.execute( UC_LINE_HEIGHT, {lineHeight: lineHeight});
                 };
 
-                this.ucLetterSpacingDialogOpened = true;
-                editor.owner.openLetterSpacingDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callback);
+                this.ucLineHeightDialogOpened = true;
+                editor.owner.openLineHeightDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callback);
 			} );
 
             return view;
@@ -67,8 +67,8 @@ export default class UcLetterSpacingUI extends Plugin {
 
         // Close the panel on the Esc key press when the editable has focus and the balloon is visible.
         editor.keystrokes.set( 'Esc', ( data, cancel ) => {
-            if (this.ucLetterSpacingDialogOpened === true) {
-                this.ucLetterSpacingDialogOpened = false;
+            if (this.ucLineHeightDialogOpened === true) {
+                this.ucLineHeightDialogOpened = false;
                 // editor.owner.closeColorDialog(editor.owner);
             }
             cancel();

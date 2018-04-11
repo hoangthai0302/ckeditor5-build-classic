@@ -4,27 +4,27 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import UcLetterSpacingCommand from './ucletterspacingcommand';
+import UcLineHeightCommand from './uclineheightcommand';
 import {downcastAttributeToElement} from '@ckeditor/ckeditor5-engine/src/conversion/downcast-converters';
 import {upcastElementToAttribute} from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
 
 
-export default class UcLetterSpacingEditing extends Plugin {
+export default class UcLineHeightEditing extends Plugin {
     /**
      * @inheritDoc
      */
     init() {
         const editor = this.editor;
         // Allow bold attribute on text nodes.
-        editor.model.schema.extend( '$text', { allowAttributes: 'letterSpacing' } );
+        editor.model.schema.extend( '$text', { allowAttributes: 'lineHeight' } );
 
         // Build converter from model to view for data and editing pipelines.
 
         editor.conversion.for( 'downcast' )
             .add( downcastAttributeToElement( {
-                model: 'letterSpacing',
+                model: 'lineHeight',
                 view: ( modelAttributeValue, viewWriter ) => {
-                    return viewWriter.createAttributeElement( 'span', { style: 'letter-spacing:' + modelAttributeValue + 'px' } );
+                    return viewWriter.createAttributeElement( 'span', { style: 'line-height:' + modelAttributeValue } );
                 }
             } ) );
 
@@ -34,14 +34,12 @@ export default class UcLetterSpacingEditing extends Plugin {
                     name: 'span'
                 },
                 model: {
-                    key: 'letterSpacing',
-                    value: viewElement => {
-                        return parseInt(viewElement.getStyle( 'letter-spacing' ));
-                    }
+                    key: 'lineHeight',
+                    value: viewElement => viewElement.getStyle( 'line-height' )
                 }
             } ) );
 
         // Create bold command.
-        editor.commands.add( 'ucLetterSpacing', new UcLetterSpacingCommand( editor ) );
+        editor.commands.add( 'ucLineHeight', new UcLineHeightCommand( editor, 'lineHeight' ) );
     }
 }

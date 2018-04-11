@@ -29,7 +29,7 @@ export default class UctransformUppercaseUI extends Plugin {
             const command = editor.commands.get( 'ucTransformUppercase' );
 
             view.set( {
-                label: t( 'Uppercase' ),
+                label: t( 'Text Transform' ),
                 // icon: uppercaseIcon,
                 tooltip: true
             } );

@@ -48,18 +48,26 @@ export default class UctransformUppercaseEditing extends Plugin {
             .add( downcastAttributeToElement( {
                 model: UC_TRANSFORM_UPPERCASE,
                 view: ( modelAttributeValue, viewWriter ) => {
-                    return viewWriter.createAttributeElement( 'span', { style: 'text-transform:uppercase;' } );
+                    return viewWriter.createAttributeElement( 'span', { style: 'text-transform:uppercase' } );
                 }
             } ) );
 
         editor.conversion.for( 'upcast' )
             .add( upcastElementToAttribute( {
                 view: {
-                    name: 'span'
+                    name: 'span',
                 },
                 model: {
                     key: UC_TRANSFORM_UPPERCASE,
-                    value: viewElement => viewElement.getStyle( 'text-transform' )
+                    value: viewElement => {
+                        const textTransform = viewElement.getStyle( 'text-transform' );
+
+                        if ( textTransform === undefined ) {
+                            return null;
+                        }
+
+                        return textTransform;
+                    }
                 }
             } ) );
         editor.commands.add( UC_TRANSFORM_UPPERCASE, new AttributeCommand( editor , UC_TRANSFORM_UPPERCASE ) );
