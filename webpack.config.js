@@ -39,7 +39,47 @@ module.exports = {
             banner: bundler.getLicenseBanner(),
             raw: true
         } ),
-        new webpack.optimize.ModuleConcatenationPlugin()
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/\.\.\/theme\/icons\/bold\.svg/,
+            '../../../../../theme/icons/bold.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/\.\.\/theme\/icons\/strikethrough\.svg/,
+            '../../../../../theme/icons/strikethrough.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/\.\.\/theme\/icons\/italic\.svg/,
+            '../../../../../theme/icons/italic.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/theme\/icons\/align-center\.svg/,
+            '../../../../theme/icons/align-center.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/theme\/icons\/align-justify\.svg/,
+            '../../../../theme/icons/align-center.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/theme\/icons\/align-left\.svg/,
+            '../../../../theme/icons/align-center.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/theme\/icons\/align-right\.svg/,
+            '../../../../theme/icons/align-center.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /@ckeditor\/ckeditor5-core\/theme\/icons\/quote\.svg/,
+            '../../../../theme/icons/blockquote.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/theme\/icons\/numberedlist\.svg/,
+            '../../../../theme/icons/numberedlist.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/theme\/icons\/bulletedlist\.svg/,
+            '../../../../theme/icons/bulletedlist.svg'
+        )
     ],
 
     module: {
