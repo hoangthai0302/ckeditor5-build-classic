@@ -45,6 +45,10 @@ module.exports = {
             '../../../../../theme/icons/bold.svg'
         ),
         new webpack.NormalModuleReplacementPlugin(
+            /\.\.\/\.\.\/theme\/icons\/underline\.svg/,
+            '../../../../../theme/icons/underline.svg'
+        ),
+        new webpack.NormalModuleReplacementPlugin(
             /\.\.\/\.\.\/theme\/icons\/strikethrough\.svg/,
             '../../../../../theme/icons/strikethrough.svg'
         ),
