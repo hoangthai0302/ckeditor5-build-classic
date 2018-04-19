@@ -62,15 +62,15 @@ module.exports = {
         ),
         new webpack.NormalModuleReplacementPlugin(
             /\.\.\/theme\/icons\/align-justify\.svg/,
-            '../../../../theme/icons/align-center.svg'
+            '../../../../theme/icons/align-justify.svg'
         ),
         new webpack.NormalModuleReplacementPlugin(
             /\.\.\/theme\/icons\/align-left\.svg/,
-            '../../../../theme/icons/align-center.svg'
+            '../../../../theme/icons/align-left.svg'
         ),
         new webpack.NormalModuleReplacementPlugin(
             /\.\.\/theme\/icons\/align-right\.svg/,
-            '../../../../theme/icons/align-center.svg'
+            '../../../../theme/icons/align-right.svg'
         ),
         new webpack.NormalModuleReplacementPlugin(
             /@ckeditor\/ckeditor5-core\/theme\/icons\/quote\.svg/,
