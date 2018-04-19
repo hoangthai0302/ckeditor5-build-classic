@@ -5,25 +5,38 @@ a.ck-button:not(.ck-disabled):hover,
 a.ck-button:not(.ck-disabled):focus{
     cursor: pointer;
 }
-.ck-editor .ck-dropdown .ck-dropdown__button:hover,
-.ck-editor .ck-dropdown .ck-dropdown__button:active{
+.ck-dropdown .ck-dropdown__button:hover,
+.ck-dropdown .ck-dropdown__button:active{
     background: transparent;
     box-shadow: none;
 }
-.ck-editor .ck-dropdown .ck-button.ck-on,
-a.ck-button.ck-on{
+.ck-dropdown .ck-button.ck-on,
+a.ck-button.ck-on,
+.ck-dropdown .ck-button.ck-on:hover,
+.ck-dropdown .ck-button.ck-on:active {
     background: #ffffff;
+    box-shadow: none;
 }
-.ck-editor .ck-dropdown .ck-dropdown__button:focus{
+.ck-dropdown .ck-dropdown__button:focus{
     box-shadow: none;
     border: none;
 }
-.ck-editor .ck-dropdown .ck-dropdown__panel {
+.ck-dropdown .ck-dropdown__panel {
     border: none;
     box-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.4);
 }
 
-.ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item {
+.ck-rounded-corners .ck-dropdown .ck-dropdown__panel .ck-list{
+    border-radius: 2px ;
+}
+
+
+.ck-font-family-dropdown .ck-dropdown__panel .ck-list__item{
+    cursor: pointer;
+    color: #4a4a4a;
+}
+
+.ck-dropdown:not(.ck-font-family-dropdown ) .ck-dropdown__panel .ck-list__item {
     cursor: pointer;
     color: #4a4a4a;
     font-size: 12px !important;
@@ -31,55 +44,39 @@ a.ck-button.ck-on{
 
 }
 
-.ck-editor__editable.ck-focused{
-    box-shadow: none!important;
-    border: none !important;
-}
 
-.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label{
-    width: 3em;
-}
-
-.ck-editor .ck-font-size-dropdown{
-    margin-right: 0px;
-}
-
-.ck-editor .ck-font-size-dropdown .ck-dropdown__panel .ck-list__item{
+.ck-balloon-panel .ck-font-size-dropdown .ck-dropdown__panel .ck-list__item{
     padding: 3px 0;
 }
 
-.ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item:focus{
+.ck-dropdown .ck-dropdown__panel .ck-list__item:focus{
     box-shadow: none;
 }
 
-.ck-editor .ck-dropdown .ck-dropdown__panel .ck-list__item.ck-list__item_active{
+.ck-dropdown .ck-dropdown__panel .ck-list__item.ck-list__item_active{
     color: #ffffff;
 }
 
-.ck-editor .ck-dropdown:after {
+.ck-dropdown:after {
     border-color: #b4b4b0 #ffffff transparent;
 }
 
-.ck-editor .ck-editor__editable.ck-focused{
-    box-shadow: none;
+.ck-editor__editable.ck-focused{
+    box-shadow: none !important;
 }
 
-.ck-editor .ck-editor__editable .image.image-style-side {
+.ck-editor__editable .image.image-style-side {
     margin-left: 32px;
 }
-.ck-editor .ck-editor__editable .image.image-style-align-left {
+.ck-editor__editable .image.image-style-align-left {
     margin-right: 32px;
 }
-.ck-editor .ck-editor__editable .image.image-style-align-right {
+.ck-editor__editable .image.image-style-align-right {
     margin-left: 32px;
 }
 
-.ck-editor .ck-editor__editable_inline{
-    padding: 12px;
-    border: none;
-}
 
-.ck-editor .ck-list__item {
+.ck-list__item {
     min-width: 100%;
 }
 
@@ -87,22 +84,33 @@ a.ck-button.ck-on{
     box-shadow: none;
 }
 
-.ck-dropdown.ck-heading-dropdown{
+.ck-editor__editable_inline > *:first-child {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label{
+    width: 3em;
+}
+
+.ck-dropdown.ck-heading-dropdown,
+.ck-font-size-dropdown{
     margin-right: 0;
 }
-.ck-sticky-panel__content{
-    border-bottom: 1px solid #f1f1eb;
 
+.ck-editor__editable_inline > *:last-child{
+    margin-top: 0;
+    margin-bottom: 0;
 }
-.ck-sticky-panel__content .ck-toolbar{
+.ck-balloon-panel .ck-toolbar{
     padding: 0;
-    border: none !important;
 }
 
 .ck-dropdown .ck-dropdown__panel .ck-list.ck-rounded-corners,
 .ck-rounded-corners .ck-dropdown .ck-dropdown__panel .ck-list{
     border-radius: 0;
 }
+
 .ck .ck-link_selected {
     background: none;
     outline: 0px;
