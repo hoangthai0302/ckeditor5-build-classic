@@ -103,3 +103,7 @@ a.ck-button.ck-on{
 .ck-rounded-corners .ck-dropdown .ck-dropdown__panel .ck-list{
     border-radius: 0;
 }
+.ck .ck-link_selected {
+    background: none;
+    outline: 0px;
+}
