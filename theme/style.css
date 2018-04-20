@@ -7,15 +7,15 @@ a.ck-button:not(.ck-disabled):focus{
 }
 .ck-dropdown .ck-dropdown__button:hover,
 .ck-dropdown .ck-dropdown__button:active{
-    background: transparent;
-    box-shadow: none;
+    background: #ffffff !important;
+    box-shadow: none !important;
 }
-.ck-dropdown .ck-button.ck-on,
+.ck.ck-dropdown .ck-button.ck-on,
 a.ck-button.ck-on,
 .ck-dropdown .ck-button.ck-on:hover,
 .ck-dropdown .ck-button.ck-on:active {
-    background: #ffffff;
-    box-shadow: none;
+    background: #ffffff !important;
+    box-shadow: none !important;
 }
 .ck-dropdown .ck-dropdown__button:focus{
     box-shadow: none;
@@ -77,7 +77,7 @@ a.ck-button.ck-on,
 
 
 .ck-list__item {
-    min-width: 100%;
+    min-width: 100% !important;
 }
 
 .ck-body .ck-input,.ck-input-text:focus{
@@ -89,7 +89,7 @@ a.ck-button.ck-on,
     margin-bottom: 0;
 }
 
-.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label{
+.ck.ck-dropdown.ck-heading-dropdown .ck-dropdown__button .ck-button__label{
     width: 3em;
 }
 
@@ -106,8 +106,13 @@ a.ck-button.ck-on,
     padding: 0;
 }
 
+.ck.ck-editor__top .ck.ck-toolbar,
+.ck.ck-editor__main .ck.ck-editor__editable_inline{
+    border: none !important;
+}
+
 .ck-dropdown .ck-dropdown__panel .ck-list.ck-rounded-corners,
-.ck-rounded-corners .ck-dropdown .ck-dropdown__panel .ck-list{
+.ck-rounded-corners .ck.ck-dropdown .ck-dropdown__panel .ck-list{
     border-radius: 0;
 }
 
