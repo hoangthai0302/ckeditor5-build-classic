@@ -37,6 +37,7 @@ import UcColorPlugin from '../plugins/uccolor/src/uccolor';
 import UcTransformPlugin from '../plugins/uctransform/src/uctransform';
 import UcLetterSpacingPlugin from '../plugins/ucletterspacing/src/ucletterspacing';
 import UcLineHeightPlugin from '../plugins/uclineheight/src/uclineheight';
+import UcVideoPlugin from '../plugins/ucvideo/src/ucvideo';
 
 import '../theme/variables.css';
 import '../theme/style.css';
@@ -70,7 +71,8 @@ ClassicEditor.build = {
         UcColorPlugin,
         UcTransformPlugin,
         UcLetterSpacingPlugin,
-        UcLineHeightPlugin
+        UcLineHeightPlugin,
+        UcVideoPlugin
 	],
 	config: {
 		toolbar: {
