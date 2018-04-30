@@ -58,20 +58,25 @@ export default class UcVideoEditing extends Plugin {
         } ) );
 
         conversion.for( 'downcast' )
-            .add( modelToViewAttributeConverter( 'src' ) )
-            .add( modelToViewAttributeConverter( 'type' ) );
-
+            .add( modelToViewAttributeConverter( 'type' ) )
+            .add( modelToViewAttributeConverter( 'src' ) );
 
         conversion.for( 'upcast' )
             .add( upcastElementToElement( {
                 view: {
                     name: 'source',
                     attributes: {
-                        src: true,
-                        type: true
+                        'type': true
                     }
                 },
-                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { src: viewSource.getAttribute( 'src' ), type: viewSource.getAttribute( 'type' ) } )
+                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { 'type': viewSource.getAttribute( 'type' ) } )
+            } ) )
+            .add( upcastAttributeToAttribute( {
+                view: {
+                    name: 'source',
+                    key: 'src'
+                },
+                model: 'src'
             } ) )
             .add( viewVideoToModel() );
     }
