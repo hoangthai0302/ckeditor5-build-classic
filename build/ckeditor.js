@@ -2,7 +2,7 @@
  * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md.
  */
-(function(d){d['en']=Object.assign(d['en']||{},{a:"Cannot upload file:",b:"Italic",c:"Bold",d:"Strikethrough",e:"Choose heading",f:"Heading",g:"Paragraph",h:"Heading 1",i:"Heading 2",j:"Heading 3",k:"Underline",l:"Code",m:"Block quote",n:"Full size image",o:"Side image",p:"Left aligned image",q:"Centered image",r:"Right aligned image",s:"Align left",t:"Align right",u:"Align center",v:"Justify",w:"Text alignment",x:"image widget",y:"Numbered List",z:"Bulleted List",aa:"Enter image caption",ab:"Upload failed",ac:"Insert image",ad:"Font Family",ae:"Default",af:"Font Size",ag:"Tiny",ah:"Small",ai:"Big",aj:"Huge",ak:"Change image text alternative",al:"Save",am:"Cancel",an:"Text alternative",ao:"Undo",ap:"Redo",aq:"Rich Text Editor, %0",ar:"Rich Text Editor"})})(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+(function(d){d['en']=Object.assign(d['en']||{},{a:"Cannot upload file:",b:"Block quote",c:"Bold",d:"Italic",e:"Strikethrough",f:"Underline",g:"Code",h:"Choose heading",i:"Heading",j:"image widget",k:"Full size image",l:"Side image",m:"Left aligned image",n:"Centered image",o:"Right aligned image",p:"Enter image caption",q:"Numbered List",r:"Bulleted List",s:"Align left",t:"Align right",u:"Align center",v:"Justify",w:"Text alignment",x:"Paragraph",y:"Heading 1",z:"Heading 2",aa:"Heading 3",ab:"Upload failed",ac:"Change image text alternative",ad:"Font Family",ae:"Default",af:"Font Size",ag:"Tiny",ah:"Small",ai:"Big",aj:"Huge",ak:"Save",al:"Cancel",am:"Text alternative",an:"Undo",ao:"Redo",ap:"Insert image",aq:"Rich Text Editor, %0",ar:"Rich Text Editor"})})(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -107,14 +107,26 @@ var isOldIE = memoize(function () {
 	return window && document && document.all && !window.atob;
 });
 
+var getTarget = function (target) {
+  return document.querySelector(target);
+};
+
 var getElement = (function (fn) {
 	var memo = {};
 
-	return function(selector) {
-		if (typeof memo[selector] === "undefined") {
-			var styleTarget = fn.call(this, selector);
+	return function(target) {
+                // If passing function in options, then use it for resolve "head" element.
+                // Useful for Shadow Root style i.e
+                // {
+                //   insertInto: function () { return document.querySelector("#foo").shadowRoot }
+                // }
+                if (typeof target === 'function') {
+                        return target();
+                }
+                if (typeof memo[target] === "undefined") {
+			var styleTarget = getTarget.call(this, target);
 			// Special case to return head of iframe instead of iframe itself
-			if (styleTarget instanceof window.HTMLIFrameElement) {
+			if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
 				try {
 					// This will throw an exception if access to iframe is blocked
 					// due to cross-origin restrictions
@@ -123,13 +135,11 @@ var getElement = (function (fn) {
 					styleTarget = null;
 				}
 			}
-			memo[selector] = styleTarget;
+			memo[target] = styleTarget;
 		}
-		return memo[selector]
+		return memo[target]
 	};
-})(function (target) {
-	return document.querySelector(target)
-});
+})();
 
 var singleton = null;
 var	singletonCounter = 0;
@@ -151,7 +161,7 @@ module.exports = function(list, options) {
 	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
 
 	// By default, add <style> tags to the <head> element
-	if (!options.insertInto) options.insertInto = "head";
+        if (!options.insertInto) options.insertInto = "head";
 
 	// By default, add <style> tags to the bottom of the target
 	if (!options.insertAt) options.insertAt = "bottom";
@@ -540,30 +550,49 @@ module.exports = "<svg width=\"20\" height=\"20\" xmlns=\"http://www.w3.org/2000
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(62);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./heading.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./heading.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./heading.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./heading.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -571,30 +600,49 @@ if(false) {
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(78);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./code.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./code.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./code.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./code.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -1178,7 +1226,7 @@ class eventinfo_EventInfo {
  *
  * @returns {String} A hexadecimal number representing the id.
  */
-function uid() {
+function uid_uid() {
 	let uuid = 'e'; // Make sure that id does not start with number.
 
 	for ( let i = 0; i < 8; i++ ) {
@@ -1676,7 +1724,7 @@ function _getEmitterListenedTo( listeningEmitter, listenedToEmitterId ) {
  */
 function _setEmitterId( emitter, id ) {
 	if ( !emitter[ _emitterId ] ) {
-		emitter[ _emitterId ] = id || uid();
+		emitter[ _emitterId ] = id || uid_uid();
 	}
 }
 
@@ -10490,7 +10538,7 @@ class collection_Collection {
 				throw new CKEditorError( 'collection-add-item-already-exists' );
 			}
 		} else {
-			item[ idProperty ] = itemId = uid();
+			item[ idProperty ] = itemId = uid_uid();
 		}
 
 		// TODO: Use ES6 default function argument.
@@ -13033,12 +13081,13 @@ class writer_Writer {
 			if ( isText || isEmpty || isUI || ( isAttribute && shouldABeOutsideB( attribute, child ) ) ) {
 				// Clone attribute.
 				const newAttribute = attribute._clone();
-				this._addToClonedElementsGroup( newAttribute );
 
 				// Wrap current node with new attribute.
 				child._remove();
 				newAttribute._appendChild( child );
+
 				parent._insertChild( i, newAttribute );
+				this._addToClonedElementsGroup( newAttribute );
 
 				wrapPositions.push(	new position_Position( parent, i ) );
 			}
@@ -13098,9 +13147,9 @@ class writer_Writer {
 
 				// Replace wrapper element with its children
 				child._remove();
-				this._removeFromClonedElementsGroup( child );
-
 				parent._insertChild( i, unwrapped );
+
+				this._removeFromClonedElementsGroup( child );
 
 				// Save start and end position of moved items.
 				unwrapPositions.push(
@@ -13507,10 +13556,10 @@ class writer_Writer {
 
 			// Break element.
 			const clonedNode = positionParent._clone();
-			this._addToClonedElementsGroup( clonedNode );
 
 			// Insert cloned node to position's parent node.
 			positionParent.parent._insertChild( offsetAfter, clonedNode );
+			this._addToClonedElementsGroup( clonedNode );
 
 			// Get nodes to move.
 			const count = positionParent.childCount - positionOffset;
@@ -13539,6 +13588,19 @@ class writer_Writer {
 	 * @param {module:engine/view/attributeelement~AttributeElement} element Attribute element to save.
 	 */
 	_addToClonedElementsGroup( element ) {
+		// Add only if the element is in document tree.
+		if ( !element.root.is( 'rootElement' ) ) {
+			return;
+		}
+
+		// Traverse the element's children recursively to find other attribute elements that also might got inserted.
+		// The loop is at the beginning so we can make fast returns later in the code.
+		if ( element.is( 'element' ) ) {
+			for ( const child of element.getChildren() ) {
+				this._addToClonedElementsGroup( child );
+			}
+		}
+
 		const id = element.id;
 
 		if ( !id ) {
@@ -13569,6 +13631,14 @@ class writer_Writer {
 	 * @param {module:engine/view/attributeelement~AttributeElement} element Attribute element to remove.
 	 */
 	_removeFromClonedElementsGroup( element ) {
+		// Traverse the element's children recursively to find other attribute elements that also got removed.
+		// The loop is at the beginning so we can make fast returns later in the code.
+		if ( element.is( 'element' ) ) {
+			for ( const child of element.getChildren() ) {
+				this._removeFromClonedElementsGroup( child );
+			}
+		}
+
 		const id = element.id;
 
 		if ( !id ) {
@@ -13576,6 +13646,10 @@ class writer_Writer {
 		}
 
 		const group = this._cloneGroups.get( id );
+
+		if ( !group ) {
+			return;
+		}
 
 		group.delete( element );
 		// Not removing group from element on purpose!
@@ -16458,7 +16532,7 @@ lodash_assignIn( emittermixin_ProxyEmitter.prototype, emittermixin, {
 // @param {Node} node
 // @return {String} UID for given DOM Node.
 function getNodeUID( node ) {
-	return node[ 'data-ck-expando' ] || ( node[ 'data-ck-expando' ] = uid() );
+	return node[ 'data-ck-expando' ] || ( node[ 'data-ck-expando' ] = uid_uid() );
 }
 
 /**
@@ -16481,9 +16555,10 @@ function getNodeUID( node ) {
 
 
 /**
- * Abstract base observer class. Observers are classes which observe changes on DOM elements, do the preliminary
- * processing and fire events on the {@link module:engine/view/document~Document} objects. Observers can also add features to the view,
- * for instance by updating its status or marking elements which need refresh on DOM events.
+ * Abstract base observer class. Observers are classes which listen to DOM events, do the preliminary
+ * processing and fire events on the {@link module:engine/view/document~Document} objects.
+ * Observers can also add features to the view, for instance by updating its status or marking elements
+ * which need refresh on DOM events.
  *
  * @abstract
  */
@@ -25921,6 +25996,7 @@ mix( LiveRange, emittermixin );
 
 
 
+
 const storePrefix = 'selection:';
 
 /**
@@ -26301,31 +26377,36 @@ class model_documentselection_DocumentSelection {
 	}
 
 	/**
-	 * Temporarily changes the gravity of the selection from left to right. The gravity defines from which direction
-	 * the selection inherits its attributes. If it's the default left gravity, the selection (after being moved by
-	 * the user) inherits attributes from its left hand side. This method allows to temporarily override this behavior
-	 * by forcing the gravity to the right.
+	 * Temporarily changes the gravity of the selection from the left to the right.
+	 *
+	 * The gravity defines from which direction the selection inherits its attributes. If it's the default left
+	 * gravity, the selection (after being moved by the the user) inherits attributes from its left hand side.
+	 * This method allows to temporarily override this behavior by forcing the gravity to the right.
+	 *
+	 * It returns an unique identifier which is required to restore the gravity. It guarantees the symmetry
+	 * of the process.
 	 *
 	 * @see module:engine/model/writer~Writer#overrideSelectionGravity
 	 * @protected
-	 * @param {Boolean} [customRestore=false] When `true` then gravity won't be restored until
-	 * {@link ~DocumentSelection#_restoreGravity} will be called directly. When `false` then gravity is restored
-	 * after selection is moved by user.
+	 * @returns {String} The unique id which allows restoring the gravity.
 	 */
-	_overrideGravity( customRestore ) {
-		this._selection.overrideGravity( customRestore );
+	_overrideGravity() {
+		return this._selection.overrideGravity();
 	}
 
 	/**
-	 * Restores {@link ~DocumentSelection#_overrideGravity overridden gravity}.
+	 * Restores the {@link ~DocumentSelection#_overrideGravity overridden gravity}.
 	 *
-	 * Note that gravity remains overridden as long as won't be restored the same number of times as was overridden.
+	 * Restoring the gravity is only possible using the unique identifier returned by
+	 * {@link ~DocumentSelection#_overrideGravity}. Note that the gravity remains overridden as long as won't be restored
+	 * the same number of times it was overridden.
 	 *
 	 * @see module:engine/model/writer~Writer#restoreSelectionGravity
 	 * @protected
+	 * @param {String} uid The unique id returned by {@link #_overrideGravity}.
 	 */
-	_restoreGravity() {
-		this._selection.restoreGravity();
+	_restoreGravity( uid ) {
+		this._selection.restoreGravity( uid );
 	}
 
 	/**
@@ -26432,12 +26513,13 @@ class documentselection_LiveSelection extends model_selection_Selection {
 		// @member {Array} module:engine/model/liveselection~LiveSelection#_hasChangedRange
 		this._hasChangedRange = false;
 
-		// Each overriding gravity increase the counter and each restoring decrease it.
-		// Gravity is overridden when counter is greater than 0. This is to prevent conflicts when
-		// gravity is overridden by more than one feature at the same time.
+		// Each overriding gravity adds an UID to the set and each removal removes it.
+		// Gravity is overridden when there's at least one UID in the set.
+		// Gravity is restored when the set is empty.
+		// This is to prevent conflicts when gravity is overridden by more than one feature at the same time.
 		// @private
-		// @type {Number}
-		this._overriddenGravityCounter = 0;
+		// @type {Set}
+		this._overriddenGravityRegister = new Set();
 
 		// Add events that will ensure selection correctness.
 		this.on( 'change:range', () => {
@@ -26514,7 +26596,7 @@ class documentselection_LiveSelection extends model_selection_Selection {
 	// @protected
 	// @type {Boolean}
 	get isGravityOverridden() {
-		return this._overriddenGravityCounter > 0;
+		return !!this._overriddenGravityRegister.size;
 	}
 
 	// Unbinds all events previously bound by live selection.
@@ -26568,28 +26650,40 @@ class documentselection_LiveSelection extends model_selection_Selection {
 		}
 	}
 
-	overrideGravity( customRestore ) {
-		this._overriddenGravityCounter++;
+	overrideGravity() {
+		const overrideUid = uid_uid();
 
-		if ( this._overriddenGravityCounter == 1 ) {
-			if ( !customRestore ) {
-				this.on( 'change:range', ( evt, data ) => {
-					if ( data.directChange ) {
-						this.restoreGravity();
-						evt.off();
-					}
-				} );
-			}
+		// Remember that another overriding has been requested. It will need to be removed
+		// before the gravity is to be restored.
+		this._overriddenGravityRegister.add( overrideUid );
 
-			this._updateAttributes();
+		if ( this._overriddenGravityRegister.size === 1 ) {
+			this._refreshAttributes();
 		}
+
+		return overrideUid;
 	}
 
-	restoreGravity() {
-		this._overriddenGravityCounter--;
+	restoreGravity( uid ) {
+		if ( !this._overriddenGravityRegister.has( uid ) ) {
+			/**
+			 * Restoring gravity for an unknown UID is not possible. Make sure you are using a correct
+			 * UID obtained from the {@link module:engine/model/writer~Writer#overrideSelectionGravity} to restore.
+			 *
+			 * @error document-selection-gravity-wrong-restore
+			 * @param {String} uid The unique identifier returned by {@link #overrideGravity}.
+			 */
+			throw new CKEditorError(
+				'document-selection-gravity-wrong-restore: Attempting to restore the selection gravity for an unknown UID.',
+				{ uid }
+			);
+		}
 
+		this._overriddenGravityRegister.delete( uid );
+
+		// Restore gravity only when all overriding have been restored.
 		if ( !this.isGravityOverridden ) {
-			this._updateAttributes();
+			this._refreshAttributes();
 		}
 	}
 
@@ -28756,6 +28850,7 @@ class commandcollection_CommandCollection {
  * @module utils/translation-service
  */
 
+/* istanbul ignore else */
 if ( !window.CKEDITOR_TRANSLATIONS ) {
 	window.CKEDITOR_TRANSLATIONS = {};
 }
@@ -44007,29 +44102,26 @@ class model_writer_Writer {
 	 * * Default gravity: selection will have the `bold` and `linkHref` attributes.
 	 * * Overridden gravity: selection will have `bold` attribute.
 	 *
-	 * By default the selection's gravity is automatically restored just after a direct selection change (when user
-	 * moved the caret) but you can pass `customRestore = true` in which case you will have to call
-	 * {@link ~Writer#restoreSelectionGravity} manually.
+	 * **Note**: It returns an unique identifier which is required to restore the gravity. It guarantees the symmetry
+	 * of the process.
 	 *
-	 * When the selection's gravity is overridden more than once without being restored in the meantime then it needs
-	 * to be restored the same number of times. This is to prevent conflicts when
-	 * more than one feature want to independently override and restore the selection's gravity.
-	 *
-	 * @param {Boolean} [customRestore=false] When `true` then gravity won't be restored until
-	 * {@link ~Writer#restoreSelectionGravity} will be called directly. When `false` then gravity is restored
-	 * after selection is moved by user.
+	 * @returns {String} The unique id which allows restoring the gravity.
 	 */
-	overrideSelectionGravity( customRestore ) {
-		this.model.document.selection._overrideGravity( customRestore );
+	overrideSelectionGravity() {
+		return this.model.document.selection._overrideGravity();
 	}
 
 	/**
 	 * Restores {@link ~Writer#overrideSelectionGravity} gravity to default.
 	 *
-	 * Note that the gravity remains overridden as long as will not be restored the same number of times as it was overridden.
+	 * Restoring the gravity is only possible using the unique identifier returned by
+	 * {@link ~Writer#overrideSelectionGravity}. Note that the gravity remains overridden as long as won't be restored
+	 * the same number of times it was overridden.
+	 *
+	 * @param {String} uid The unique id returned by {@link ~Writer#overrideSelectionGravity}.
 	 */
-	restoreSelectionGravity() {
-		this.model.document.selection._restoreGravity();
+	restoreSelectionGravity( uid ) {
+		this.model.document.selection._restoreGravity( uid );
 	}
 
 	/**
@@ -44958,6 +45050,7 @@ class differ_Differ {
 			}
 
 			if ( inc.type == 'attribute' ) {
+				// In case of attribute change, `howMany` should be kept same as `nodesToHandle`. It's not an error.
 				if ( old.type == 'insert' ) {
 					if ( inc.offset < old.offset && incEnd > old.offset ) {
 						if ( incEnd > oldEnd ) {
@@ -44980,6 +45073,7 @@ class differ_Differ {
 						}
 
 						inc.nodesToHandle = old.offset - inc.offset;
+						inc.howMany = inc.nodesToHandle;
 					} else if ( inc.offset >= old.offset && inc.offset < oldEnd ) {
 						if ( incEnd > oldEnd ) {
 							inc.nodesToHandle = incEnd - oldEnd;
@@ -44991,8 +45085,15 @@ class differ_Differ {
 				}
 
 				if ( old.type == 'attribute' ) {
+					// There are only two conflicting scenarios possible here:
 					if ( inc.offset >= old.offset && incEnd <= oldEnd ) {
+						// `old` change includes `inc` change, or they are the same.
 						inc.nodesToHandle = 0;
+						inc.howMany = 0;
+						inc.offset = 0;
+					} else if ( inc.offset <= old.offset && incEnd >= oldEnd ) {
+						// `inc` change includes `old` change.
+						old.howMany = 0;
 					}
 				}
 			}
@@ -45724,7 +45825,7 @@ class model_document_Document {
 	}
 
 	/**
-	 * Creates a new top-level root.
+	 * Creates a new root.
 	 *
 	 * @param {String} [elementName='$root'] The element name. Defaults to `'$root'` which also has some basic schema defined
 	 * (`$block`s are allowed inside the `$root`). Make sure to define a proper schema if you use a different name.
@@ -45761,10 +45862,10 @@ class model_document_Document {
 	}
 
 	/**
-	 * Returns the top-level root by its name.
+	 * Returns a root by its name.
 	 *
 	 * @param {String} [name='main'] A unique root name.
-	 * @returns {module:engine/model/rootelement~RootElement|null} The root registered under a given name or null when
+	 * @returns {module:engine/model/rootelement~RootElement|null} The root registered under a given name or `null` when
 	 * there is no root with the given name.
 	 */
 	getRoot( name = 'main' ) {
@@ -48465,6 +48566,9 @@ class editor_Editor {
 		/**
 		 * Holds all configurations specific to this editor instance.
 		 *
+		 *		editor.config.get( 'image.toolbar' );
+		 *		// -> [ 'imageStyle:full', 'imageStyle:side', '|', 'imageTextAlternative' ]
+		 *
 		 * @readonly
 		 * @member {module:utils/config~Config}
 		 */
@@ -48475,6 +48579,8 @@ class editor_Editor {
 		/**
 		 * The plugins loaded and in use by this editor instance.
 		 *
+		 *		editor.plugins.get( 'Clipboard' ); // -> instance of the Clipboard plugin.
+		 *
 		 * @readonly
 		 * @member {module:core/plugincollection~PluginCollection}
 		 */
@@ -48482,6 +48588,14 @@ class editor_Editor {
 
 		/**
 		 * Commands registered to the editor.
+		 *
+		 * Use the shorthand {@link #execute `editor.execute()`} method to execute commands:
+		 *
+		 *		// Execute the bold command:
+		 *		editor.execute( 'bold' );
+		 *
+		 *		// Check the state of the bold command:
+		 *		editor.commands.get( 'bold' ).value;
 		 *
 		 * @readonly
 		 * @member {module:core/commandcollection~CommandCollection}
@@ -48506,7 +48620,7 @@ class editor_Editor {
 		 * Defines whether this editor is in read-only mode.
 		 *
 		 * In read-only mode the editor {@link #commands commands} are disabled so it is not possible
-		 * to modify document using them.
+		 * to modify document by using them.
 		 *
 		 * @observable
 		 * @member {Boolean} #isReadOnly
@@ -48516,7 +48630,7 @@ class editor_Editor {
 		/**
 		 * The editor's model.
 		 *
-		 * The center of the editor's abstract data model.
+		 * The central point of the editor's abstract data model.
 		 *
 		 * @readonly
 		 * @member {module:engine/model/model~Model}
@@ -48525,7 +48639,7 @@ class editor_Editor {
 
 		/**
 		 * The {@link module:engine/controller/datacontroller~DataController data controller}.
-		 * Used e.g. for setting or retrieving editor data.
+		 * Used e.g. for setting and retrieving editor data.
 		 *
 		 * @readonly
 		 * @member {module:engine/controller/datacontroller~DataController}
@@ -48560,6 +48674,20 @@ class editor_Editor {
 
 		/**
 		 * Instance of the {@link module:core/editingkeystrokehandler~EditingKeystrokeHandler}.
+		 *
+		 * It allows setting simple keystrokes:
+		 *
+		 *		// Execute the bold command on Ctrl+E:
+		 *		editor.keystrokes.set( 'Ctrl+E', 'bold' );
+		 *
+		 *		// Execute your own callback:
+		 *		editor.keystrokes.set( 'Ctrl+E', ( data, cancel ) => {
+		 *			console.log( data.keyCode );
+		 *
+		 *			// Prevent default (native) action and stop the underlying keydown event
+		 *			// so no other editor feature will interfere.
+		 *			cancel();
+		 *		} );
 		 *
 		 * @readonly
 		 * @member {module:core/editingkeystrokehandler~EditingKeystrokeHandler}
@@ -48746,21 +48874,43 @@ const DataApiMixin = {
 /* harmony default export */ var dataapimixin = (DataApiMixin);
 
 /**
- * Interface for setting and getting data to/from the editor's main root element
+ * Interface defining an editor methods for setting and getting data to/from the editor's main root element
  * using the {@link module:core/editor/editor~Editor#data data pipeline}.
+ *
+ * This interface is not part of the {@link module:core/editor/editor~Editor} class because one may want to implement
+ * an editor with multiple root elements, in which case the methods for setting/getting data will need to be implemented
+ * differently.
  *
  * @interface DataApi
  */
 
 /**
- * Sets the data in the editor's main root.
+ * Sets the data in the editor.
+ *
+ *		editor.setData( '<p>This is editor!</p>' );
+ *
+ * By default the editor accepts HTML. This can be controlled by injecting a different data processor.
+ * See {@glink features/markdown Markdown output} guide for more details.
+ *
+ * Note: Not only is the format of the data configurable, but the type of the `setData()`'s parameter does not
+ * have to be a string either. You can e.g. accept an object or a DOM `DocumentFragment` if you consider this
+ * the right format for you.
  *
  * @method #setData
  * @param {String} data Input data.
  */
 
 /**
- * Gets the data from the editor's main root.
+ * Gets the data from the editor.
+ *
+ *		editor.getData(); // -> '<p>This is editor!</p>'
+ *
+ * By default the editor outputs HTML. This can be controlled by injecting a different data processor.
+ * See {@glink features/markdown Markdown output} guide for more details.
+ *
+ * Note: Not only is the format of the data configurable, but the type of the `getData()`'s return value does not
+ * have to be a string either. You can e.g. return an object or a DOM `DocumentFragment`  if you consider this
+ * the right format for you.
  *
  * @method #getData
  * @returns {String} Output data.
@@ -52282,7 +52432,7 @@ class boxededitoruiview_BoxedEditorUIView extends editoruiview_EditorUIView {
 	 */
     constructor(locale) {
         super(locale);
-        const ariaLabelUid = uid();
+        const ariaLabelUid = uid_uid();
         /**
 		 * Collection of the child views located in the top (`.ck-editor__top`)
 		 * area of the UI.
@@ -53999,7 +54149,16 @@ function getFiles( nativeDataTransfer ) {
 
 
 /**
- * {@link module:engine/view/document~Document#event:paste Paste} event observer.
+ * Clipboard events observer.
+ *
+ * Fires the following events:
+ *
+ * * {@link module:engine/view/document~Document#event:clipboardInput}
+ * * {@link module:engine/view/document~Document#event:dragover}
+ * * {@link module:engine/view/document~Document#event:drop}
+ * * {@link module:engine/view/document~Document#event:paste}
+ * * {@link module:engine/view/document~Document#event:copy}
+ * * {@link module:engine/view/document~Document#event:cut}
  *
  * Note that this observer is not available by default. To make it available it needs to be added to
  * {@link module:engine/view/document~Document} by the {@link module:engine/view/view~View#addObserver} method.
@@ -57144,8 +57303,8 @@ class undoui_UndoUI extends Plugin {
     init() {
         const editor = this.editor;
         const t = editor.t;
-        this._addButton('undo', t('ao'), 'CTRL+Z', undo_default.a);
-        this._addButton('redo', t('ap'), 'CTRL+Y', redo_default.a);
+        this._addButton('undo', t('an'), 'CTRL+Z', undo_default.a);
+        this._addButton('redo', t('ao'), 'CTRL+Y', redo_default.a);
     }
     /**
 	 * Creates a button for the specified command.
@@ -57666,7 +57825,7 @@ class filerepository_FileLoader {
 		 * @readonly
 		 * @member {Number}
 		 */
-		this.id = uid();
+		this.id = uid_uid();
 
 		/**
 		 * A `File` instance associated with this file loader.
@@ -59033,7 +59192,7 @@ class italicui_ItalicUI extends Plugin {
             const command = editor.commands.get(italicui_ITALIC);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('b'),
+                label: t('d'),
                 icon: italic_default.a,
                 keystroke: 'CTRL+I',
                 tooltip: true
@@ -59449,7 +59608,7 @@ class blockquoteui_BlockQuoteUI extends Plugin {
             const command = editor.commands.get('blockQuote');
             const buttonView = new buttonview_ButtonView(locale);
             buttonView.set({
-                label: t('m'),
+                label: t('b'),
                 icon: blockquote_default.a,
                 tooltip: true
             });
@@ -60090,7 +60249,7 @@ CloudServices.Token = token_token;
 /**
  * The URL to the security token endpoint in your application. The role of this endpoint is to securely authorize the
  * end users of your application to use [CKEditor Cloud Services](https://ckeditor.com/ckeditor-cloud-services), only
- * if they should have access e.g. to upload files with Easy Image.
+ * if they should have access e.g. to upload files with Easy Image or to access the Collaboraation service.
  *
  * You can find more information about token endpoints in the
  * {@glink @cs guides/quick-start#create-token-endpoint Cloud Services - Quick start}
@@ -60107,13 +60266,33 @@ CloudServices.Token = token_token;
  *
  * The upload URL is unique for each customer and can be found in the [CKEditor Ecosystem dashboard](https://dashboard.ckeditor.com)
  * after subscribing to Easy Image service.
- * To learn how to start using Easy Image check {@glink @cs guides/quick-start Cloud Services - Quick start} documentation.
+ * To learn how to start using Easy Image check {@glink @cs guides/easy-image/quick-start Easy Image - Quick start} documentation.
  *
  * Note: Make sure to also set the {@link module:cloud-services/cloudservices~CloudServicesConfig#tokenUrl} configuration option.
  *
- * Read more in [Cloud Services Quick start](https://docs.ckeditor.com/cs/latest/guides/quick-start.html).
- *
  * @member {String} module:cloud-services/cloudservices~CloudServicesConfig#uploadUrl
+ */
+
+/**
+ * The URL for web socket communication, used by `CollaborativeEditing` plugin. Every customer (organization in the CKEditor
+ * Ecosystem dashboard) has its own, unique URLs to communicate with CKEditor Cloud Services. The URL can be found in the
+ * CKEditor Ecosystem dashboard.
+ *
+ * Note: unlike most plugins, `CollaborativeEditing` is not included in any CKEditor 5 build and has to be installed manually.
+ * Check [Collaboration overview](https://docs.ckeditor.com/ckeditor5/latest/features/collaboration/overview.html) for more details.
+ *
+ * @member {String} module:cloud-services/cloudservices~CloudServicesConfig#webSocketUrl
+ */
+
+/**
+ * Document ID, used by `CollaborativeEditing` plugin. All editor instances created with the same document ID will collaborate.
+ * It means that each document needs a different document ID if you do not want to start collaboration between these documents.
+ * The ID is usually a primary key of the document in the database, but you are free to provide whatever identifier fits your scenario.
+ *
+ * Note: unlike most plugins, `CollaborativeEditing` is not included in any CKEditor 5 build and has to be installed manually.
+ * Check [Collaboration overview](https://docs.ckeditor.com/ckeditor5/latest/features/collaboration/overview.html) for more details.
+ *
+ * @member {String} module:cloud-services/cloudservices~CloudServicesConfig#documentId
  */
 
 // CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-easy-image/src/cloudservicesuploadadapter.js
@@ -60808,7 +60987,7 @@ class imageediting_ImageEditing extends Plugin {
         }));
         conversion.for('editingDowncast').add(downcastElementToElement({
             model: 'image',
-            view: (modelElement, viewWriter) => toImageWidget(createImageViewElement(viewWriter), viewWriter, t('x'))
+            view: (modelElement, viewWriter) => toImageWidget(createImageViewElement(viewWriter), viewWriter, t('j'))
         }));
         conversion.for('downcast').add(modelToViewAttributeConverter('src')).add(modelToViewAttributeConverter('alt')).add(srcsetAttributeConverter());
         conversion.for('upcast').add(upcastElementToElement({
@@ -61457,7 +61636,7 @@ class labeledinputview_LabeledInputView extends src_view_View {
 	constructor( locale, InputView ) {
 		super( locale );
 
-		const id = `ck-input-${ uid() }`;
+		const id = `ck-input-${ uid_uid() }`;
 
 		/**
 		 * The text of the label.
@@ -61799,14 +61978,14 @@ class textalternativeformview_TextAlternativeFormView extends src_view_View {
 		 *
 		 * @member {module:ui/button/buttonview~ButtonView} #saveButtonView
 		 */
-        this.saveButtonView = this._createButton(t('al'), check_default.a, 'ck-button-save');
+        this.saveButtonView = this._createButton(t('ak'), check_default.a, 'ck-button-save');
         this.saveButtonView.type = 'submit';
         /**
 		 * A button used to cancel the form.
 		 *
 		 * @member {module:ui/button/buttonview~ButtonView} #cancelButtonView
 		 */
-        this.cancelButtonView = this._createButton(t('am'), cancel_default.a, 'ck-button-cancel', 'cancel');
+        this.cancelButtonView = this._createButton(t('al'), cancel_default.a, 'ck-button-cancel', 'cancel');
         /**
 		 * A collection of views which can be focused in the form.
 		 *
@@ -61900,8 +62079,8 @@ class textalternativeformview_TextAlternativeFormView extends src_view_View {
     _createLabeledInputView() {
         const t = this.locale.t;
         const labeledInput = new labeledinputview_LabeledInputView(this.locale, InputTextView);
-        labeledInput.label = t('an');
-        labeledInput.inputView.placeholder = t('an');
+        labeledInput.label = t('am');
+        labeledInput.inputView.placeholder = t('am');
         return labeledInput;
     }
 }
@@ -63323,7 +63502,7 @@ class imagetextalternativeui_ImageTextAlternativeUI extends Plugin {
             const command = editor.commands.get('imageTextAlternative');
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('ak'),
+                label: t('ac'),
                 icon: low_vision_default.a,
                 tooltip: true
             });
@@ -63837,7 +64016,7 @@ class imageuploadui_ImageUploadUI extends Plugin {
                 allowMultipleFiles: true
             });
             view.buttonView.set({
-                label: t('ac'),
+                label: t('ap'),
                 icon: icons_image_default.a,
                 tooltip: true
             });
@@ -66148,6 +66327,35 @@ function focusDropdownContentsOnArrows( dropdownView ) {
 	} );
 }
 
+// CONCATENATED MODULE: ./node_modules/@ckeditor/ckeditor5-heading/src/utils.js
+/**
+ * Returns heading options as defined in `config.heading.options` but processed to consider
+ * editor localization, i.e. to display {@link module:heading/heading~HeadingOption}
+ * in the correct language.
+ *
+ * Note: The reason behind this method is that there's no way to use {@link module:utils/locale~Locale#t}
+ * when the user config is defined because the editor does not exist yet.
+ *
+ * @param {module:core/editor/editor~Editor} editor
+ * @returns {Array.<module:heading/heading~HeadingOption>}.
+ */
+function getLocalizedOptions(editor) {
+    const t = editor.t;
+    const localizedTitles = {
+        Paragraph: t('x'),
+        'Heading 1': t('y'),
+        'Heading 2': t('z'),
+        'Heading 3': t('aa')
+    };
+    return editor.config.get('heading.options').map(option => {
+        const title = localizedTitles[option.title];
+        if (title && title != option.title) {
+            // Clone the option to avoid altering the original `config.heading.options`.
+            option = Object.assign({}, option, { title });
+        }
+        return option;
+    });
+}
 // EXTERNAL MODULE: ./node_modules/@ckeditor/ckeditor5-heading/theme/heading.css
 var heading = __webpack_require__(4);
 var heading_default = /*#__PURE__*/__webpack_require__.n(heading);
@@ -66165,6 +66373,7 @@ var heading_default = /*#__PURE__*/__webpack_require__.n(heading);
 
 
 
+
 /**
  * The headings UI feature. It introduces the `headings` dropdown.
  *
@@ -66177,9 +66386,9 @@ class headingui_HeadingUI extends Plugin {
     init() {
         const editor = this.editor;
         const t = editor.t;
-        const options = this._getLocalizedOptions();
-        const defaultTitle = t('e');
-        const dropdownTooltip = t('f');
+        const options = getLocalizedOptions(editor);
+        const defaultTitle = t('h');
+        const dropdownTooltip = t('i');
         // Register UI component.
         editor.ui.componentFactory.add('heading', locale => {
             const titles = {};
@@ -66229,35 +66438,6 @@ class headingui_HeadingUI extends Plugin {
                 editor.editing.view.focus();
             });
             return dropdownView;
-        });
-    }
-    /**
-	 * Returns heading options as defined in `config.heading.options` but processed to consider
-	 * editor localization, i.e. to display {@link module:heading/heading~HeadingOption}
-	 * in the correct language.
-	 *
-	 * Note: The reason behind this method is that there's no way to use {@link module:utils/locale~Locale#t}
-	 * when the user config is defined because the editor does not exist yet.
-	 *
-	 * @private
-	 * @returns {Array.<module:heading/heading~HeadingOption>}.
-	 */
-    _getLocalizedOptions() {
-        const editor = this.editor;
-        const t = editor.t;
-        const localizedTitles = {
-            Paragraph: t('g'),
-            'Heading 1': t('h'),
-            'Heading 2': t('i'),
-            'Heading 3': t('j')
-        };
-        return editor.config.get('heading.options').map(option => {
-            const title = localizedTitles[option.title];
-            if (title && title != option.title) {
-                // Clone the option to avoid altering the original `config.heading.options`.
-                option = Object.assign({}, option, { title });
-            }
-            return option;
         });
     }
 }
@@ -66375,6 +66555,8 @@ class heading_Heading extends Plugin {
  * @property {module:engine/view/elementdefinition~ElementDefinition} view Definition of a view element to convert from/to.
  * @property {String} title The user-readable title of the option.
  * @property {String} class The class which will be added to the dropdown item representing this option.
+ * @property {String} [icon] Icon used by {@link module:heading/headingbuttonsui~HeadingButtonsUI}. It can be omitted when using
+ * the default configuration.
  */
 
 // EXTERNAL MODULE: ./node_modules/@ckeditor/ckeditor5-engine/theme/placeholder.css
@@ -66664,7 +66846,7 @@ class imagecaptionediting_ImageCaptionEditing extends Plugin {
         const createCaptionForData = writer => writer.createContainerElement('figcaption');
         data.downcastDispatcher.on('insert:caption', captionModelToView(createCaptionForData, false));
         // Model to view converter for the editing pipeline.
-        const createCaptionForEditing = captionElementCreator(view, t('aa'));
+        const createCaptionForEditing = captionElementCreator(view, t('p'));
         editing.downcastDispatcher.on('insert:caption', captionModelToView(createCaptionForEditing));
         // Always show caption in view when something is inserted in model.
         editing.downcastDispatcher.on('insert', this._fixCaptionVisibility(data => data.item), { priority: 'high' });
@@ -67397,11 +67579,11 @@ class imagestyleui_ImageStyleUI extends Plugin {
     get localizedDefaultStylesTitles() {
         const t = this.editor.t;
         return {
-            'Full size image': t('n'),
-            'Side image': t('o'),
-            'Left aligned image': t('p'),
-            'Centered image': t('q'),
-            'Right aligned image': t('r')
+            'Full size image': t('k'),
+            'Side image': t('l'),
+            'Left aligned image': t('m'),
+            'Centered image': t('n'),
+            'Right aligned image': t('o')
         };
     }
     /**
@@ -69498,8 +69680,8 @@ class listui_ListUI extends Plugin {
     init() {
         // Create two buttons and link them with numberedList and bulletedList commands.
         const t = this.editor.t;
-        this._addButton('numberedList', t('y'), numberedlist_default.a);
-        this._addButton('bulletedList', t('z'), bulletedlist_default.a);
+        this._addButton('numberedList', t('q'), numberedlist_default.a);
+        this._addButton('bulletedList', t('r'), bulletedlist_default.a);
     }
     /**
 	 * Helper method for initializing a button and linking it with an appropriate command.
@@ -69655,7 +69837,7 @@ class strikethroughui_StrikethroughUI extends Plugin {
             const command = editor.commands.get(strikethroughui_STRIKETHROUGH);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('d'),
+                label: t('e'),
                 icon: strikethrough_default.a,
                 keystroke: 'CTRL+SHIFT+X',
                 tooltip: true
@@ -69789,7 +69971,7 @@ class underlineui_UnderlineUI extends Plugin {
             const command = editor.commands.get(underlineui_UNDERLINE);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('k'),
+                label: t('f'),
                 icon: underline_default.a,
                 keystroke: 'CTRL+U',
                 tooltip: true
@@ -69925,7 +70107,7 @@ class codeui_CodeUI extends Plugin {
             const command = editor.commands.get(codeui_CODE);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('l'),
+                label: t('g'),
                 icon: code_default.a,
                 tooltip: true
             });
@@ -71820,26 +72002,74 @@ function createLinkElement( href, writer ) {
 
 
 
+
 /**
- * This helper adds two-step caret movement behavior for the given attribute.
+ * This helper enabled the two-step caret (phantom) movement behavior for the given {@link module:engine/model/model~Model}
+ * attribute on arrow right (<kbd>→</kbd>) and left (<kbd>←</kbd>) key press.
  *
- * For example, when this behavior is enabled for the `linkHref` attribute (which converts to `<a>` element in the view)
- * and the caret is just before an `<a>` element (at a link boundary), then pressing
- * the right arrow key will move caret into that `<a>`element instead of moving it after the next character:
+ * Thanks to this (phantom) caret movement the user is able to type before/after as well as at the
+ * beginning/end of an attribute.
  *
- * * With two-step caret movement: `<p>foo{}<a>bar</a>biz<p>` + <kbd>→</kbd> => `<p>foo<a>{}bar</a>biz<p>`
- * * Without two-step caret movement: `<p>foo{}<a>bar</a>biz<p>` + <kbd>→</kbd> => `<p>foo<a>b{}ar</a>biz<p>`
+ * # Forward movement
  *
- * The same behavior will be changed fo "leaving" an attribute element:
+ * ## "Entering" an attribute:
  *
- * * With two-step caret movement: `<p>foo<a>bar{}</a>biz<p>` + <kbd>→</kbd> => `<p>foo<a>bar</a>{}biz<p>`
- * * Without two-step caret movement: `<p>foo<a>bar{}</a>biz<p>` + <kbd>→</kbd> => `<p>foo<a>bar</a>b{}iz<p>`
+ * When this behavior is enabled for the `a` attribute and the selection is right before it
+ * (at the attribute boundary), pressing the right arrow key will not move the selection but update its
+ * attributes accordingly:
  *
- * And when moving left:
+ * * When enabled:
  *
- * * With two-step caret movement: `<p>foo<a>bar</a>b{}iz<p>` + <kbd>←</kbd> => `<p>foo<a>bar</a>{}biz<p>` +
- * <kbd>←</kbd> => `<p>foo<a>bar{}</a>biz<p>`
- * * Without two-step caret movement: `<p>foo<a>bar</a>b{}iz<p>` + <kbd>←</kbd> => `<p>foo<a>bar{}</a>biz<p>`
+ *   		foo{}<$text a="true">bar</$text>
+ *
+ *    <kbd>→</kbd>
+ *
+ *   		foo<$text a="true">{}bar</$text>
+ *
+ * * When disabled:
+ *
+ *   		foo{}<$text a="true">bar</$text>
+ *
+ *   <kbd>→</kbd>
+ *
+ *   		foo<$text a="true">b{}ar</$text>
+ *
+ *
+ * ## "Leaving" an attribute:
+ *
+ * * When enabled:
+ *
+ *   		<$text a="true">bar{}</$text>baz
+ *
+ *    <kbd>→</kbd>
+ *
+ *   		<$text a="true">bar</$text>{}baz
+ *
+ * * When disabled:
+ *
+ *   		<$text a="true">bar{}</$text>baz
+ *
+ *   <kbd>→</kbd>
+ *
+ *   		<$text a="true">bar</$text>b{}az
+ *
+ * # Backward movement
+ *
+ * * When enabled:
+ *
+ *   		<$text a="true">bar</$text>{}baz
+ *
+ *    <kbd>←</kbd>
+ *
+ *   		<$text a="true">bar{}</$text>baz
+ *
+ * * When disabled:
+ *
+ *   		<$text a="true">bar</$text>{}baz
+ *
+ *   <kbd>←</kbd>
+ *
+ *   		<$text a="true">ba{}r</$text>b{}az
  *
  * @param {module:engine/view/view~View} view View controller instance.
  * @param {module:engine/model/model~Model} model Data model instance.
@@ -71848,10 +72078,32 @@ function createLinkElement( href, writer ) {
  * @param {String} attribute Attribute for which this behavior will be added.
  */
 function bindTwoStepCaretToAttribute( view, model, emitter, attribute ) {
+	const twoStepCaretHandler = new TwoStepCaretHandler( model, emitter, attribute );
 	const modelSelection = model.document.selection;
 
-	// Listen to keyboard events and handle cursor before the move.
+	// Listen to keyboard events and handle the caret movement according to the 2-step caret logic.
+	//
+	// Note: This listener has the "high+1" priority:
+	// * "high" because of the filler logic implemented in the renderer which also engages on #keydown.
+	// When the gravity is overridden the attributes of the (model) selection attributes are reset.
+	// It may end up with the filler kicking in and breaking the selection.
+	// * "+1" because we would like to avoid collisions with other features (like Widgets), which
+	// take over the keydown events with the "high" priority. Two-step caret movement takes precedence
+	// over Widgets in that matter.
+	//
+	// Find out more in https://github.com/ckeditor/ckeditor5-engine/issues/1301.
 	emitter.listenTo( view.document, 'keydown', ( evt, data ) => {
+		// This implementation works only for collapsed selection.
+		if ( !modelSelection.isCollapsed ) {
+			return;
+		}
+
+		// When user tries to expand the selection or jump over the whole word or to the beginning/end then
+		// two-steps movement is not necessary.
+		if ( data.shiftKey || data.altKey || data.ctrlKey ) {
+			return;
+		}
+
 		const arrowRightPressed = data.keyCode == keyCodes.arrowright;
 		const arrowLeftPressed = data.keyCode == keyCodes.arrowleft;
 
@@ -71860,95 +72112,474 @@ function bindTwoStepCaretToAttribute( view, model, emitter, attribute ) {
 			return;
 		}
 
-		// This implementation works only for collapsed selection.
-		if ( !modelSelection.isCollapsed ) {
-			return;
-		}
-
-		// When user tries to expand selection or jump over the whole word or to the beginning/end then
-		// two-steps movement is not necessary.
-		if ( data.shiftKey || data.altKey || data.ctrlKey ) {
-			return;
-		}
-
 		const position = modelSelection.getFirstPosition();
+		let isMovementHandled;
 
-		// Moving right.
 		if ( arrowRightPressed ) {
-			// If gravity is already overridden then do nothing.
-			// It means that we already enter `foo<a>{}bar</a>biz` or left `foo<a>bar</a>{}biz` text with attribute
-			// and gravity will be restored just after caret movement.
-			if ( modelSelection.isGravityOverridden ) {
-				return;
-			}
-
-			// If caret sticks to the bound of Text with attribute it means that we are going to
-			// enter `foo{}<a>bar</a>biz` or leave `foo<a>bar{}</a>biz` the text with attribute.
-			if ( isAtAttributeBoundary( position.nodeAfter, position.nodeBefore, attribute ) ) {
-				// So we need to prevent caret from being moved.
-				data.preventDefault();
-				// And override default selection gravity.
-				model.change( writer => writer.overrideSelectionGravity() );
-			}
-
-		// Moving left.
+			isMovementHandled = twoStepCaretHandler.handleForwardMovement( position, data );
 		} else {
-			// If caret sticks to the bound of Text with attribute and gravity is already overridden it means that
-			// we are going to enter `foo<a>bar</a>{}biz` or leave `foo<a>{}bar</a>biz` text with attribute.
-			if ( modelSelection.isGravityOverridden && isAtAttributeBoundary( position.nodeBefore, position.nodeAfter, attribute ) ) {
-				// So we need to prevent cater from being moved.
-				data.preventDefault();
-				// And restore the gravity.
-				model.change( writer => writer.restoreSelectionGravity() );
-
-				return;
-			}
-
-			// If we are here we need to check if caret is a one character before the text with attribute bound
-			// `foo<a>bar</a>b{}iz` or `foo<a>b{}ar</a>biz`.
-			const nextPosition = position.getShiftedBy( -1 );
-
-			// When position is the same it means that parent bound has been reached.
-			if ( !nextPosition.isBefore( position ) ) {
-				return;
-			}
-
-			// When caret is going stick to the bound of Text with attribute after movement then we need to override
-			// the gravity before the move. But we need to do it in a custom way otherwise `selection#change:range`
-			// event following the overriding will restore the gravity.
-			if ( isAtAttributeBoundary( nextPosition.nodeBefore, nextPosition.nodeAfter, attribute ) ) {
-				model.change( writer => {
-					let counter = 0;
-
-					// So let's override the gravity.
-					writer.overrideSelectionGravity( true );
-
-					// But skip the following `change:range` event and restore the gravity on the next one.
-					emitter.listenTo( modelSelection, 'change:range', ( evt, data ) => {
-						if ( counter++ && data.directChange ) {
-							writer.restoreSelectionGravity();
-							evt.off();
-						}
-					} );
-				} );
-			}
+			isMovementHandled = twoStepCaretHandler.handleBackwardMovement( position, data );
 		}
-	} );
+
+		// Stop the keydown event if the two-step arent movement handled it. Avoid collisions
+		// with other features which may also take over the caret movement (e.g. Widget).
+		if ( isMovementHandled ) {
+			evt.stop();
+		}
+	}, { priority: src_priorities.get( 'high' ) + 1 } );
 }
 
-// @param {module:engine/model/node~Node} nextNode Node before the position.
-// @param {module:engine/model/node~Node} prevNode Node after the position.
-// @param {String} attribute Attribute name.
-// @returns {Boolean} `true` when position between the nodes sticks to the bound of text with given attribute.
-function isAtAttributeBoundary( nextNode, prevNode, attribute ) {
-	const isAttrInNext = nextNode ? nextNode.hasAttribute( attribute ) : false;
-	const isAttrInPrev = prevNode ? prevNode.hasAttribute( attribute ) : false;
+/**
+ * This is a private helper–class for {@link module:engine/utils/bindtwostepcarettoattribute}.
+ * It handles the state of the 2-step caret movement for a single {@link module:engine/model/model~Model}
+ * attribute upon the `keypress` in the {@link module:engine/view/view~View}.
+ *
+ * @private
+ */
+class TwoStepCaretHandler {
+	/*
+	 * Creates two step handler instance.
+	 *
+	 * @param {module:engine/model/model~Model} model Data model instance.
+	 * @param {module:utils/dom/emittermixin~Emitter} emitter The emitter to which this behavior should be added
+	 * (e.g. a plugin instance).
+	 * @param {String} attribute Attribute for which the behavior will be added.
+	 */
+	constructor( model, emitter, attribute ) {
+		/**
+		 * The model instance this class instance operates on.
+		 *
+		 * @readonly
+		 * @member {module:engine/model/model~Model#schema}
+		 */
+		this.model = model;
 
-	if ( isAttrInNext && isAttrInPrev && nextNode.getAttributeKeys( attribute ) !== prevNode.getAttribute( attribute ) ) {
-		return true;
+		/**
+		 * The Attribute this class instance operates on.
+		 *
+		 * @readonly
+		 * @member {String}
+		 */
+		this.attribute = attribute;
+
+		/**
+		 * A reference to the document selection.
+		 *
+		 * @private
+		 * @member {module:engine/model/selection~Selection}
+		 */
+		this._modelSelection = model.document.selection;
+
+		/**
+		 * The current UID of the overridden gravity, as returned by
+		 * {@link module:engine/model/writer~Writer#overrideSelectionGravity}.
+		 *
+		 * @private
+		 * @member {String}
+		 */
+		this._overrideUid = null;
+
+		/**
+		 * A flag indicating that the automatic gravity restoration for this attribute
+		 * should not happen upon the next
+		 * {@link module:engine/model/selection~Selection#event:change:range} event.
+		 *
+		 * @private
+		 * @member {String}
+		 */
+		this._isNextGravityRestorationSkipped = false;
+
+		// The automatic gravity restoration logic.
+		emitter.listenTo( this._modelSelection, 'change:range', ( evt, data ) => {
+			// Skipping the automatic restoration is needed if the selection should change
+			// but the gravity must remain overridden afterwards. See the #handleBackwardMovement
+			// to learn more.
+			if ( this._isNextGravityRestorationSkipped ) {
+				this._isNextGravityRestorationSkipped = false;
+
+				return;
+			}
+
+			// Skip automatic restore when the gravity is not overridden — simply, there's nothing to restore
+			// at this moment.
+			if ( !this._isGravityOverridden ) {
+				return;
+			}
+
+			// Skip automatic restore when the change is indirect AND the selection is at the attribute boundary.
+			// It means that e.g. if the change was external (collaboration) and the user had their
+			// selection around the link, its gravity should remain intact in this change:range event.
+			if ( !data.directChange && isAtBoundary( this._modelSelection.getFirstPosition(), attribute ) ) {
+				return;
+			}
+
+			this._restoreGravity();
+		} );
 	}
 
-	return isAttrInNext && !isAttrInPrev || !isAttrInNext && isAttrInPrev;
+	/**
+	 * Updates the document selection and the view according to the two–step caret movement state
+	 * when moving **forwards**. Executed upon `keypress` in the {@link module:engine/view/view~View}.
+	 *
+	 * @param {module:engine/model/position~Position} position The model position at the moment of the key press.
+	 * @param {module:engine/view/observer/domeventdata~DomEventData} data Data of the key press.
+	 * @returns {Boolean} `true` when the handler prevented caret movement
+	 */
+	handleForwardMovement( position, data ) {
+		const attribute = this.attribute;
+
+		// DON'T ENGAGE 2-SCM if gravity is already overridden. It means that we just entered
+		//
+		// 		<paragraph>foo<$text attribute>{}bar</$text>baz</paragraph>
+		//
+		// or left the attribute
+		//
+		// 		<paragraph>foo<$text attribute>bar</$text>{}baz</paragraph>
+		//
+		// and the gravity will be restored automatically.
+		if ( this._isGravityOverridden ) {
+			return;
+		}
+
+		// DON'T ENGAGE 2-SCM when the selection is at the beginning of the block AND already has the
+		// attribute:
+		// * when the selection was initially set there using the mouse,
+		// * when the editor has just started
+		//
+		//		<paragraph><$text attribute>{}bar</$text>baz</paragraph>
+		//
+		if ( position.isAtStart && this._hasSelectionAttribute ) {
+			return;
+		}
+
+		// ENGAGE 2-SCM when about to leave one attribute value and enter another:
+		//
+		// 		<paragraph><$text attribute="1">foo{}</$text><$text attribute="2">bar</$text></paragraph>
+		//
+		// but DON'T when already in between of them (no attribute selection):
+		//
+		// 		<paragraph><$text attribute="1">foo</$text>{}<$text attribute="2">bar</$text></paragraph>
+		//
+		if ( isBetweenDifferentValues( position, attribute ) && this._hasSelectionAttribute ) {
+			this._preventCaretMovement( data );
+			this._removeSelectionAttribute();
+
+			return true;
+		}
+
+		// ENGAGE 2-SCM when entering an attribute:
+		//
+		// 		<paragraph>foo{}<$text attribute>bar</$text>baz</paragraph>
+		//
+		if ( isAtStartBoundary( position, attribute ) ) {
+			this._preventCaretMovement( data );
+			this._overrideGravity();
+
+			return true;
+		}
+
+		// ENGAGE 2-SCM when leaving an attribute:
+		//
+		//		<paragraph>foo<$text attribute>bar{}</$text>baz</paragraph>
+		//
+		if ( isAtEndBoundary( position, attribute ) && this._hasSelectionAttribute ) {
+			this._preventCaretMovement( data );
+			this._overrideGravity();
+
+			return true;
+		}
+	}
+
+	/**
+	 * Updates the document selection and the view according to the two–step caret movement state
+	 * when moving **backwards**. Executed upon `keypress` in the {@link module:engine/view/view~View}.
+	 *
+	 * @param {module:engine/model/position~Position} position The model position at the moment of the key press.
+	 * @param {module:engine/view/observer/domeventdata~DomEventData} data Data of the key press.
+	 * @returns {Boolean} `true` when the handler prevented caret movement
+	 */
+	handleBackwardMovement( position, data ) {
+		const attribute = this.attribute;
+
+		// When the gravity is already overridden...
+		if ( this._isGravityOverridden ) {
+			// ENGAGE 2-SCM & REMOVE SELECTION ATTRIBUTE
+			// when about to leave one attribute value and enter another:
+			//
+			// 		<paragraph><$text attribute="1">foo</$text><$text attribute="2">{}bar</$text></paragraph>
+			//
+			// but DON'T when already in between of them (no attribute selection):
+			//
+			// 		<paragraph><$text attribute="1">foo</$text>{}<$text attribute="2">bar</$text></paragraph>
+			//
+			if ( isBetweenDifferentValues( position, attribute ) && this._hasSelectionAttribute ) {
+				this._preventCaretMovement( data );
+				this._restoreGravity();
+				this._removeSelectionAttribute();
+
+				return true;
+			}
+
+			// ENGAGE 2-SCM when at any boundary of the attribute:
+			//
+			// 		<paragraph>foo<$text attribute>bar</$text>{}baz</paragraph>
+			// 		<paragraph>foo<$text attribute>{}bar</$text>baz</paragraph>
+			//
+			else {
+				this._preventCaretMovement( data );
+				this._restoreGravity();
+
+				// REMOVE SELECTION ATRIBUTE at the beginning of the block.
+				// It's like restoring gravity but towards a non-existent content when
+				// the gravity is overridden:
+				//
+				// 		<paragraph><$text attribute>{}bar</$text></paragraph>
+				//
+				// becomes:
+				//
+				// 		<paragraph>{}<$text attribute>bar</$text></paragraph>
+				//
+				if ( position.isAtStart ) {
+					this._removeSelectionAttribute();
+				}
+
+				return true;
+			}
+		} else {
+			// ENGAGE 2-SCM when between two different attribute values but selection has no attribute:
+			//
+			// 		<paragraph><$text attribute="1">foo</$text>{}<$text attribute="2">bar</$text></paragraph>
+			//
+			if ( isBetweenDifferentValues( position, attribute ) && !this._hasSelectionAttribute ) {
+				this._preventCaretMovement( data );
+				this._setSelectionAttributeFromTheNodeBefore( position );
+
+				return true;
+			}
+
+			// End of block boundary cases:
+			//
+			// 		<paragraph><$text attribute>bar{}</$text></paragraph>
+			// 		<paragraph><$text attribute>bar</$text>{}</paragraph>
+			//
+			if ( position.isAtEnd && isAtEndBoundary( position, attribute ) ) {
+				// DON'T ENGAGE 2-SCM if the selection has the attribute already.
+				// This is a common selection if set using the mouse.
+				//
+				// 		<paragraph><$text attribute>bar{}</$text></paragraph>
+				//
+				if ( this._hasSelectionAttribute ) {
+					// DON'T ENGAGE 2-SCM if the attribute at the end of the block which has length == 1.
+					// Make sure the selection will not the attribute after it moves backwards.
+					//
+					// 		<paragraph>foo<$text attribute>b{}</$text></paragraph>
+					//
+					if ( isStepAfterTheAttributeBoundary( position, attribute ) ) {
+						// Skip the automatic gravity restore upon the next selection#change:range event.
+						// If not skipped, it would automatically restore the gravity, which should remain
+						// overridden.
+						this._skipNextAutomaticGravityRestoration();
+						this._overrideGravity();
+
+						// Don't return "true" here because we didn't call _preventCaretMovement.
+						// Returning here will destabilize the filler logic, which also listens to
+						// keydown (and the event would be stopped).
+					}
+
+					return;
+				}
+				// ENGAGE 2-SCM if the selection has no attribute. This may happen when the user
+				// left the attribute using a FORWARD 2-SCM.
+				//
+				// 		<paragraph><$text attribute>bar</$text>{}</paragraph>
+				//
+				else {
+					this._preventCaretMovement( data );
+					this._setSelectionAttributeFromTheNodeBefore( position );
+
+					return true;
+				}
+			}
+
+			// REMOVE SELECTION ATRIBUTE when restoring gravity towards a non-existent content at the
+			// beginning of the block.
+			//
+			// 		<paragraph>{}<$text attribute>bar</$text></paragraph>
+			//
+			if ( position.isAtStart ) {
+				if ( this._hasSelectionAttribute ) {
+					this._removeSelectionAttribute();
+					this._preventCaretMovement( data );
+
+					return true;
+				}
+
+				return;
+			}
+
+			// DON'T ENGAGE 2-SCM when about to enter of leave an attribute.
+			// We need to check if the caret is a one position before the attribute boundary:
+			//
+			// 		<paragraph>foo<$text attribute>b{}ar</$text>baz</paragraph>
+			// 		<paragraph>foo<$text attribute>bar</$text>b{}az</paragraph>
+			//
+			if ( isStepAfterTheAttributeBoundary( position, attribute ) ) {
+				// Skip the automatic gravity restore upon the next selection#change:range event.
+				// If not skipped, it would automatically restore the gravity, which should remain
+				// overridden.
+				this._skipNextAutomaticGravityRestoration();
+				this._overrideGravity();
+
+				// Don't return "true" here because we didn't call _preventCaretMovement.
+				// Returning here will destabilize the filler logic, which also listens to
+				// keydown (and the event would be stopped).
+			}
+		}
+	}
+
+	/**
+	 * `true` when the gravity is overridden for the {@link #attribute}.
+	 *
+	 * @readonly
+	 * @private
+	 * @type {Boolean}
+	 */
+	get _isGravityOverridden() {
+		return !!this._overrideUid;
+	}
+
+	/**
+	 * `true` when the {@link module:engine/model/selection~Selection} has the {@link #attribute}.
+	 *
+	 * @readonly
+	 * @private
+	 * @type {Boolean}
+	 */
+	get _hasSelectionAttribute() {
+		return this._modelSelection.hasAttribute( this.attribute );
+	}
+
+	/**
+	 * Overrides the gravity using the {@link module:engine/model/writer~Writer model writer}
+	 * and stores the information about this fact in the {@link #_overrideUid}.
+	 *
+	 * A shorthand for {@link module:engine/model/writer~Writer#overrideSelectionGravity}.
+	 *
+	 * @private
+	 */
+	_overrideGravity() {
+		this._overrideUid = this.model.change( writer => writer.overrideSelectionGravity() );
+	}
+
+	/**
+	 * Restores the gravity using the {@link module:engine/model/writer~Writer model writer}.
+	 *
+	 * A shorthand for {@link module:engine/model/writer~Writer#restoreSelectionGravity}.
+	 *
+	 * @private
+	 */
+	_restoreGravity() {
+		this.model.change( writer => {
+			writer.restoreSelectionGravity( this._overrideUid );
+			this._overrideUid = null;
+		} );
+	}
+
+	/**
+	 * Prevents the caret movement in the view by calling `preventDefault` on the event data.
+	 *
+	 * @private
+	 */
+	_preventCaretMovement( data ) {
+		data.preventDefault();
+	}
+
+	/**
+	 * Removes the {@link #attribute} from the selection using using the
+	 * {@link module:engine/model/writer~Writer model writer}.
+	 *
+	 * @private
+	 */
+	_removeSelectionAttribute() {
+		this.model.change( writer => {
+			writer.removeSelectionAttribute( this.attribute );
+		} );
+	}
+
+	/**
+	 * Applies the {@link #attribute} to the current selection using using the
+	 * value from the node before the current position. Uses
+	 * the {@link module:engine/model/writer~Writer model writer}.
+	 *
+	 * @private
+	 * @param {module:engine/model/position~Position} position
+	 */
+	_setSelectionAttributeFromTheNodeBefore( position ) {
+		const attribute = this.attribute;
+
+		this.model.change( writer => {
+			writer.setSelectionAttribute( this.attribute, position.nodeBefore.getAttribute( attribute ) );
+		} );
+	}
+
+	/**
+	 * Skips the next automatic selection gravity restoration upon the
+	 * {@link module:engine/model/selection~Selection#event:change:range} event.
+	 *
+	 * See {@link #_isNextGravityRestorationSkipped}.
+	 *
+	 * @private
+	 */
+	_skipNextAutomaticGravityRestoration() {
+		this._isNextGravityRestorationSkipped = true;
+	}
+}
+
+// @param {module:engine/model/position~Position} position
+// @param {String} attribute
+// @returns {Boolean} `true` when position between the nodes sticks to the bound of text with given attribute.
+function isAtBoundary( position, attribute ) {
+	return isAtStartBoundary( position, attribute ) || isAtEndBoundary( position, attribute );
+}
+
+// @param {module:engine/model/position~Position} position
+// @param {String} attribute
+function isAtStartBoundary( position, attribute ) {
+	const { nodeBefore, nodeAfter } = position;
+	const isAttrBefore = nodeBefore ? nodeBefore.hasAttribute( attribute ) : false;
+	const isAttrAfter = nodeAfter ? nodeAfter.hasAttribute( attribute ) : false;
+
+	return isAttrAfter && ( !isAttrBefore || nodeBefore.getAttribute( attribute ) !== nodeAfter.getAttribute( attribute ) );
+}
+
+// @param {module:engine/model/position~Position} position
+// @param {String} attribute
+function isAtEndBoundary( position, attribute ) {
+	const { nodeBefore, nodeAfter } = position;
+	const isAttrBefore = nodeBefore ? nodeBefore.hasAttribute( attribute ) : false;
+	const isAttrAfter = nodeAfter ? nodeAfter.hasAttribute( attribute ) : false;
+
+	return isAttrBefore && ( !isAttrAfter || nodeBefore.getAttribute( attribute ) !== nodeAfter.getAttribute( attribute ) );
+}
+
+// @param {module:engine/model/position~Position} position
+// @param {String} attribute
+function isBetweenDifferentValues( position, attribute ) {
+	const { nodeBefore, nodeAfter } = position;
+	const isAttrBefore = nodeBefore ? nodeBefore.hasAttribute( attribute ) : false;
+	const isAttrAfter = nodeAfter ? nodeAfter.hasAttribute( attribute ) : false;
+
+	if ( !isAttrAfter || !isAttrBefore ) {
+		return;
+	}
+
+	return nodeAfter.getAttribute( attribute ) !== nodeBefore.getAttribute( attribute );
+}
+
+// @param {module:engine/model/position~Position} position
+// @param {String} attribute
+function isStepAfterTheAttributeBoundary( position, attribute ) {
+	return isAtBoundary( position.getShiftedBy( -1 ), attribute );
 }
 
 // EXTERNAL MODULE: ./node_modules/@ckeditor/ckeditor5-link/theme/link.css
@@ -74305,30 +74936,49 @@ function constant(value) {
 /* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(12);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../postcss-loader/lib/index.js??ref--1-1!./globals.css", function() {
-			var newContent = require("!!../../../../postcss-loader/lib/index.js??ref--1-1!./globals.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../postcss-loader/lib/index.js??ref--1-1!./globals.css", function() {
+		var newContent = require("!!../../../../postcss-loader/lib/index.js??ref--1-1!./globals.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74406,7 +75056,7 @@ module.exports = function (css) {
 			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
 
 		// already a full url? no change
-		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/|\s*$)/i.test(unquotedOrigUrl)) {
 		  return fullMatch;
 		}
 
@@ -74437,30 +75087,49 @@ module.exports = function (css) {
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(15);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./editorui.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./editorui.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./editorui.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./editorui.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74474,30 +75143,49 @@ module.exports = ".ck.ck-editor__editable:not(.ck-editor__nested-editable){borde
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(17);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./label.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./label.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./label.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./label.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74511,30 +75199,49 @@ module.exports = ".ck.ck-label{display:block}.ck.ck-voice-label{display:none}.ck
 /* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(19);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./stickypanel.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./stickypanel.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./stickypanel.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./stickypanel.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74548,30 +75255,49 @@ module.exports = ".ck.ck-sticky-panel .ck-sticky-panel__content_sticky{z-index:v
 /* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(21);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbar.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbar.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbar.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbar.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74585,30 +75311,49 @@ module.exports = ".ck.ck-toolbar{-moz-user-select:none;-webkit-user-select:none;
 /* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(23);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./classiceditor.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./classiceditor.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./classiceditor.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./classiceditor.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74622,30 +75367,49 @@ module.exports = ".ck.ck-editor{position:relative}.ck.ck-editor .ck-editor__top 
 /* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(25);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./icon.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./icon.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./icon.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./icon.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74659,30 +75423,49 @@ module.exports = ".ck.ck-icon{vertical-align:middle}:root{--ck-icon-size:calc(va
 /* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(27);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./tooltip.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./tooltip.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./tooltip.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./tooltip.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74696,30 +75479,49 @@ module.exports = ".ck.ck-tooltip,.ck.ck-tooltip .ck-tooltip__text:after{position
 /* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(29);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./button.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./button.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./button.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./button.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74763,30 +75565,49 @@ module.exports = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- Generator: Ad
 /* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(36);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./blockquote.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./blockquote.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./blockquote.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./blockquote.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74800,30 +75621,49 @@ module.exports = ".ck-content blockquote{overflow:hidden;padding-right:1.5em;pad
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(38);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./widget.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./widget.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./widget.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./widget.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74837,30 +75677,49 @@ module.exports = ":root{--ck-widget-outline-thickness:3px;--ck-color-widget-bord
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(40);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./inputtext.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./inputtext.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./inputtext.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./inputtext.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74886,30 +75745,49 @@ module.exports = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"
 /* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(44);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./textalternativeform.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./textalternativeform.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./textalternativeform.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./textalternativeform.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74923,30 +75801,49 @@ module.exports = ".ck.ck-text-alternative-form .ck-labeled-input{display:inline-
 /* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(46);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./balloonpanel.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./balloonpanel.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./balloonpanel.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./balloonpanel.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -74966,30 +75863,49 @@ module.exports = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"
 /* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(49);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./image.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./image.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./image.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./image.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75009,30 +75925,49 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 700 25
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(52);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./imageuploadprogress.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./imageuploadprogress.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./imageuploadprogress.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./imageuploadprogress.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75046,30 +75981,49 @@ module.exports = ".ck-content .image{position:relative;overflow:hidden}.ck-conte
 /* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(54);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./dropdown.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./dropdown.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./dropdown.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./dropdown.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75089,30 +76043,49 @@ module.exports = "<svg width=\"10\" height=\"10\" viewBox=\"0 0 10 10\" xmlns=\"
 /* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(57);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./list.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./list.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./list.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./list.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75126,30 +76099,49 @@ module.exports = ".ck.ck-list{-moz-user-select:none;-webkit-user-select:none;-ms
 /* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(59);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbardropdown.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbardropdown.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbardropdown.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./toolbardropdown.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75163,30 +76155,49 @@ module.exports = ".ck.ck-toolbar-dropdown .ck-toolbar{flex-wrap:nowrap}.ck.ck-to
 /* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(61);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./listdropdown.css", function() {
-			var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./listdropdown.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./listdropdown.css", function() {
+		var newContent = require("!!../../../../../postcss-loader/lib/index.js??ref--1-1!./listdropdown.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75206,30 +76217,49 @@ module.exports = ".ck.ck-heading_heading1{font-size:20px}.ck.ck-heading_heading2
 /* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(64);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./placeholder.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./placeholder.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./placeholder.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./placeholder.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75243,30 +76273,49 @@ module.exports = ".ck.ck-placeholder:before,.ck .ck-placeholder:before{content:a
 /* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(66);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagecaption.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagecaption.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagecaption.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagecaption.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75304,30 +76353,49 @@ module.exports = "<svg width=\"20\" height=\"20\" xmlns=\"http://www.w3.org/2000
 /* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(72);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagestyle.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagestyle.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagestyle.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./imagestyle.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75389,30 +76457,49 @@ module.exports = "<svg width=\"20\" height=\"20\" viewBox=\"0 0 20 20\" xmlns=\"
 /* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(82);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./fontsize.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./fontsize.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./fontsize.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./fontsize.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75450,30 +76537,49 @@ module.exports = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- Generator: Ad
 /* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(88);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./link.css", function() {
-			var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./link.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../../../postcss-loader/lib/index.js??ref--1-1!./link.css", function() {
+		var newContent = require("!!../../../postcss-loader/lib/index.js??ref--1-1!./link.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75523,30 +76629,49 @@ module.exports = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!-- Generator: Ad
 /* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(96);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./variables.css", function() {
-			var newContent = require("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./variables.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./variables.css", function() {
+		var newContent = require("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./variables.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
@@ -75560,30 +76685,49 @@ module.exports = ":root{--ck-border-radius:4px;--ck-font-size-base:14px;--ck-cus
 /* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
 
-// load the styles
 var content = __webpack_require__(98);
+
 if(typeof content === 'string') content = [[module.i, content, '']];
-// Prepare cssTransformation
+
 var transform;
+var insertInto;
+
+
 
 var options = {"singleton":true,"hmr":true}
+
 options.transform = transform
-// add the styles to the DOM
+options.insertInto = undefined;
+
 var update = __webpack_require__(0)(content, options);
+
 if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
+
 if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./style.css", function() {
-			var newContent = require("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./style.css");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
+	module.hot.accept("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./style.css", function() {
+		var newContent = require("!!../node_modules/postcss-loader/lib/index.js??ref--1-1!./style.css");
+
+		if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+
+		var locals = (function(a, b) {
+			var key, idx = 0;
+
+			for(key in a) {
+				if(!b || a[key] !== b[key]) return false;
+				idx++;
+			}
+
+			for(key in b) idx--;
+
+			return idx === 0;
+		}(content.locals, newContent.locals));
+
+		if(!locals) throw new Error('Aborting CSS HMR due to changed css-modules locals.');
+
+		update(newContent);
+	});
+
 	module.hot.dispose(function() { update(); });
 }
 
