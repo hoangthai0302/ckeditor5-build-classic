@@ -2,7 +2,7 @@
  * @license Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md.
  */
-(function(d){d['en']=Object.assign(d['en']||{},{a:"Cannot upload file:",b:"Block quote",c:"Bold",d:"Italic",e:"Strikethrough",f:"Underline",g:"Code",h:"Choose heading",i:"Heading",j:"image widget",k:"Full size image",l:"Side image",m:"Left aligned image",n:"Centered image",o:"Right aligned image",p:"Enter image caption",q:"Numbered List",r:"Bulleted List",s:"Align left",t:"Align right",u:"Align center",v:"Justify",w:"Text alignment",x:"Paragraph",y:"Heading 1",z:"Heading 2",aa:"Heading 3",ab:"Upload failed",ac:"Change image text alternative",ad:"Font Family",ae:"Default",af:"Font Size",ag:"Tiny",ah:"Small",ai:"Big",aj:"Huge",ak:"Save",al:"Cancel",am:"Text alternative",an:"Undo",ao:"Redo",ap:"Insert image",aq:"Rich Text Editor, %0",ar:"Rich Text Editor"})})(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
+(function(d){d['en']=Object.assign(d['en']||{},{a:"Cannot upload file:",b:"Bold",c:"Block quote",d:"Italic",e:"Underline",f:"Code",g:"Strikethrough",h:"Numbered List",i:"Bulleted List",j:"Choose heading",k:"Heading",l:"image widget",m:"Enter image caption",n:"Full size image",o:"Side image",p:"Left aligned image",q:"Centered image",r:"Right aligned image",s:"Align left",t:"Align right",u:"Align center",v:"Justify",w:"Text alignment",x:"Upload failed",y:"Change image text alternative",z:"Font Family",aa:"Default",ab:"Font Size",ac:"Tiny",ad:"Small",ae:"Big",af:"Huge",ag:"Undo",ah:"Redo",ai:"Save",aj:"Cancel",ak:"Text alternative",al:"Insert image",am:"Paragraph",an:"Heading 1",ao:"Heading 2",ap:"Heading 3",aq:"Rich Text Editor, %0",ar:"Rich Text Editor"})})(window.CKEDITOR_TRANSLATIONS||(window.CKEDITOR_TRANSLATIONS={}));
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57303,8 +57303,8 @@ class undoui_UndoUI extends Plugin {
     init() {
         const editor = this.editor;
         const t = editor.t;
-        this._addButton('undo', t('an'), 'CTRL+Z', undo_default.a);
-        this._addButton('redo', t('ao'), 'CTRL+Y', redo_default.a);
+        this._addButton('undo', t('ag'), 'CTRL+Z', undo_default.a);
+        this._addButton('redo', t('ah'), 'CTRL+Y', redo_default.a);
     }
     /**
 	 * Creates a button for the specified command.
@@ -59055,7 +59055,7 @@ class boldui_BoldUI extends Plugin {
             const command = editor.commands.get(boldui_BOLD);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('c'),
+                label: t('b'),
                 icon: bold_default.a,
                 keystroke: 'CTRL+B',
                 tooltip: true
@@ -59608,7 +59608,7 @@ class blockquoteui_BlockQuoteUI extends Plugin {
             const command = editor.commands.get('blockQuote');
             const buttonView = new buttonview_ButtonView(locale);
             buttonView.set({
-                label: t('b'),
+                label: t('c'),
                 icon: blockquote_default.a,
                 tooltip: true
             });
@@ -60987,7 +60987,7 @@ class imageediting_ImageEditing extends Plugin {
         }));
         conversion.for('editingDowncast').add(downcastElementToElement({
             model: 'image',
-            view: (modelElement, viewWriter) => toImageWidget(createImageViewElement(viewWriter), viewWriter, t('j'))
+            view: (modelElement, viewWriter) => toImageWidget(createImageViewElement(viewWriter), viewWriter, t('l'))
         }));
         conversion.for('downcast').add(modelToViewAttributeConverter('src')).add(modelToViewAttributeConverter('alt')).add(srcsetAttributeConverter());
         conversion.for('upcast').add(upcastElementToElement({
@@ -61978,14 +61978,14 @@ class textalternativeformview_TextAlternativeFormView extends src_view_View {
 		 *
 		 * @member {module:ui/button/buttonview~ButtonView} #saveButtonView
 		 */
-        this.saveButtonView = this._createButton(t('ak'), check_default.a, 'ck-button-save');
+        this.saveButtonView = this._createButton(t('ai'), check_default.a, 'ck-button-save');
         this.saveButtonView.type = 'submit';
         /**
 		 * A button used to cancel the form.
 		 *
 		 * @member {module:ui/button/buttonview~ButtonView} #cancelButtonView
 		 */
-        this.cancelButtonView = this._createButton(t('al'), cancel_default.a, 'ck-button-cancel', 'cancel');
+        this.cancelButtonView = this._createButton(t('aj'), cancel_default.a, 'ck-button-cancel', 'cancel');
         /**
 		 * A collection of views which can be focused in the form.
 		 *
@@ -62079,8 +62079,8 @@ class textalternativeformview_TextAlternativeFormView extends src_view_View {
     _createLabeledInputView() {
         const t = this.locale.t;
         const labeledInput = new labeledinputview_LabeledInputView(this.locale, InputTextView);
-        labeledInput.label = t('am');
-        labeledInput.inputView.placeholder = t('am');
+        labeledInput.label = t('ak');
+        labeledInput.inputView.placeholder = t('ak');
         return labeledInput;
     }
 }
@@ -63502,7 +63502,7 @@ class imagetextalternativeui_ImageTextAlternativeUI extends Plugin {
             const command = editor.commands.get('imageTextAlternative');
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('ac'),
+                label: t('y'),
                 icon: low_vision_default.a,
                 tooltip: true
             });
@@ -64016,7 +64016,7 @@ class imageuploadui_ImageUploadUI extends Plugin {
                 allowMultipleFiles: true
             });
             view.buttonView.set({
-                label: t('ap'),
+                label: t('al'),
                 icon: icons_image_default.a,
                 tooltip: true
             });
@@ -64722,7 +64722,7 @@ class imageuploadediting_ImageUploadEditing extends Plugin {
             // Might be 'aborted'.
             if (loader.status == 'error') {
                 notification.showWarning(error, {
-                    title: t('ab'),
+                    title: t('x'),
                     namespace: 'upload'
                 });
             }
@@ -66342,10 +66342,10 @@ function focusDropdownContentsOnArrows( dropdownView ) {
 function getLocalizedOptions(editor) {
     const t = editor.t;
     const localizedTitles = {
-        Paragraph: t('x'),
-        'Heading 1': t('y'),
-        'Heading 2': t('z'),
-        'Heading 3': t('aa')
+        Paragraph: t('am'),
+        'Heading 1': t('an'),
+        'Heading 2': t('ao'),
+        'Heading 3': t('ap')
     };
     return editor.config.get('heading.options').map(option => {
         const title = localizedTitles[option.title];
@@ -66387,8 +66387,8 @@ class headingui_HeadingUI extends Plugin {
         const editor = this.editor;
         const t = editor.t;
         const options = getLocalizedOptions(editor);
-        const defaultTitle = t('h');
-        const dropdownTooltip = t('i');
+        const defaultTitle = t('j');
+        const dropdownTooltip = t('k');
         // Register UI component.
         editor.ui.componentFactory.add('heading', locale => {
             const titles = {};
@@ -66846,7 +66846,7 @@ class imagecaptionediting_ImageCaptionEditing extends Plugin {
         const createCaptionForData = writer => writer.createContainerElement('figcaption');
         data.downcastDispatcher.on('insert:caption', captionModelToView(createCaptionForData, false));
         // Model to view converter for the editing pipeline.
-        const createCaptionForEditing = captionElementCreator(view, t('p'));
+        const createCaptionForEditing = captionElementCreator(view, t('m'));
         editing.downcastDispatcher.on('insert:caption', captionModelToView(createCaptionForEditing));
         // Always show caption in view when something is inserted in model.
         editing.downcastDispatcher.on('insert', this._fixCaptionVisibility(data => data.item), { priority: 'high' });
@@ -67579,11 +67579,11 @@ class imagestyleui_ImageStyleUI extends Plugin {
     get localizedDefaultStylesTitles() {
         const t = this.editor.t;
         return {
-            'Full size image': t('k'),
-            'Side image': t('l'),
-            'Left aligned image': t('m'),
-            'Centered image': t('n'),
-            'Right aligned image': t('o')
+            'Full size image': t('n'),
+            'Side image': t('o'),
+            'Left aligned image': t('p'),
+            'Centered image': t('q'),
+            'Right aligned image': t('r')
         };
     }
     /**
@@ -69680,8 +69680,8 @@ class listui_ListUI extends Plugin {
     init() {
         // Create two buttons and link them with numberedList and bulletedList commands.
         const t = this.editor.t;
-        this._addButton('numberedList', t('q'), numberedlist_default.a);
-        this._addButton('bulletedList', t('r'), bulletedlist_default.a);
+        this._addButton('numberedList', t('h'), numberedlist_default.a);
+        this._addButton('bulletedList', t('i'), bulletedlist_default.a);
     }
     /**
 	 * Helper method for initializing a button and linking it with an appropriate command.
@@ -69837,7 +69837,7 @@ class strikethroughui_StrikethroughUI extends Plugin {
             const command = editor.commands.get(strikethroughui_STRIKETHROUGH);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('e'),
+                label: t('g'),
                 icon: strikethrough_default.a,
                 keystroke: 'CTRL+SHIFT+X',
                 tooltip: true
@@ -69971,7 +69971,7 @@ class underlineui_UnderlineUI extends Plugin {
             const command = editor.commands.get(underlineui_UNDERLINE);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('f'),
+                label: t('e'),
                 icon: underline_default.a,
                 keystroke: 'CTRL+U',
                 tooltip: true
@@ -70107,7 +70107,7 @@ class codeui_CodeUI extends Plugin {
             const command = editor.commands.get(codeui_CODE);
             const view = new buttonview_ButtonView(locale);
             view.set({
-                label: t('g'),
+                label: t('f'),
                 icon: code_default.a,
                 tooltip: true
             });
@@ -70523,7 +70523,7 @@ class fontfamilyui_FontFamilyUI extends Plugin {
             const dropdownView = createDropdown(locale);
             addListToDropdown(dropdownView, _prepareListOptions(options, command));
             dropdownView.buttonView.set({
-                label: t('ad'),
+                label: t('z'),
                 icon: font_family_default.a,
                 tooltip: true
             });
@@ -70555,7 +70555,7 @@ class fontfamilyui_FontFamilyUI extends Plugin {
         return options.map(option => {
             // The only title to localize is "Default" others are font names.
             if (option.title === 'Default') {
-                option.title = t('ae');
+                option.title = t('aa');
             }
             return option;
         });
@@ -70959,7 +70959,7 @@ class fontsizeui_FontSizeUI extends Plugin {
             addListToDropdown(dropdownView, fontsizeui__prepareListOptions(options, command));
             // Create dropdown model.
             dropdownView.buttonView.set({
-                label: t('af'),
+                label: t('ab'),
                 icon: font_size_default.a,
                 tooltip: true
             });
@@ -70988,11 +70988,11 @@ class fontsizeui_FontSizeUI extends Plugin {
         const editor = this.editor;
         const t = editor.t;
         const localizedTitles = {
-            Default: t('ae'),
-            Tiny: t('ag'),
-            Small: t('ah'),
-            Big: t('ai'),
-            Huge: t('aj')
+            Default: t('aa'),
+            Tiny: t('ac'),
+            Small: t('ad'),
+            Big: t('ae'),
+            Huge: t('af')
         };
         const options = utils_normalizeOptions(editor.config.get('fontSize.options'));
         return options.map(option => {
@@ -74548,12 +74548,11 @@ class ucvideoediting_UcVideoEditing extends Plugin {
             isObject: true,
             isBlock: true,
             allowWhere: '$block',
-            allowAttributes: ['src', 'type' ]
+            allowAttributes: ['type', 'src' ]
         } );
-        schema.extend( '$text', { allowIn: 'ucVideo' } );
+        schema.extend( '$text', { allowIn : 'ucVideo'});
 
-
-        conversion.for( 'dataDowncast' ).add( downcastElementToElement( {
+            conversion.for( 'dataDowncast' ).add( downcastElementToElement( {
             model: 'ucVideo',
             view: ( modelElement, viewWriter ) => createVideoViewElement( viewWriter )
         } ) );
@@ -74572,17 +74571,17 @@ class ucvideoediting_UcVideoEditing extends Plugin {
                 view: {
                     name: 'source',
                     attributes: {
-                        'type': true
+                        src: true
                     }
                 },
-                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { 'type': viewSource.getAttribute( 'type' ) } )
+                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { src: viewSource.getAttribute( 'src' ) } )
             } ) )
             .add( upcastAttributeToAttribute( {
                 view: {
                     name: 'source',
-                    key: 'src'
+                    key: 'type'
                 },
-                model: 'src'
+                model: 'type'
             } ) )
             .add( viewVideoToModel() );
     }

@@ -44,12 +44,11 @@ export default class UcVideoEditing extends Plugin {
             isObject: true,
             isBlock: true,
             allowWhere: '$block',
-            allowAttributes: ['src', 'type' ]
+            allowAttributes: ['type', 'src' ]
         } );
-        schema.extend( '$text', { allowIn: 'ucVideo' } );
+        schema.extend( '$text', { allowIn : 'ucVideo'});
 
-
-        conversion.for( 'dataDowncast' ).add( downcastElementToElement( {
+            conversion.for( 'dataDowncast' ).add( downcastElementToElement( {
             model: 'ucVideo',
             view: ( modelElement, viewWriter ) => createVideoViewElement( viewWriter )
         } ) );
@@ -68,17 +67,17 @@ export default class UcVideoEditing extends Plugin {
                 view: {
                     name: 'source',
                     attributes: {
-                        'type': true
+                        src: true
                     }
                 },
-                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { 'type': viewSource.getAttribute( 'type' ) } )
+                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { src: viewSource.getAttribute( 'src' ) } )
             } ) )
             .add( upcastAttributeToAttribute( {
                 view: {
                     name: 'source',
-                    key: 'src'
+                    key: 'type'
                 },
-                model: 'src'
+                model: 'type'
             } ) )
             .add( viewVideoToModel() );
     }
