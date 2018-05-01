@@ -46,6 +46,8 @@ export default class UcVideoEditing extends Plugin {
             allowWhere: '$block',
             allowAttributes: ['src', 'type' ]
         } );
+        schema.extend( '$text', { allowIn: 'ucVideo' } );
+
 
         conversion.for( 'dataDowncast' ).add( downcastElementToElement( {
             model: 'ucVideo',
@@ -96,6 +98,7 @@ export function createVideoViewElement( writer ) {
     const video = writer.createContainerElement( 'video', { controls: '', class: 'uc-video' } );
 
     writer.insert( ViewPosition.createAt( video ), emptyElement );
-
+    // const textNode = writer.createText( 'foo' );
+    // writer.insert( ViewPosition.createAt( video, 'end' ), textNode );
     return video;
 }
