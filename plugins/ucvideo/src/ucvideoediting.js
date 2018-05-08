@@ -48,7 +48,19 @@ export default class UcVideoEditing extends Plugin {
         } );
         schema.extend( '$text', { allowIn : 'ucVideo'});
 
-            conversion.for( 'dataDowncast' ).add( downcastElementToElement( {
+        conversion.for( 'upcast' )
+            .add( upcastElementToElement( {
+                view: {
+                    name: 'video'
+                },
+                model: ( viewVideo, modelWriter ) => {
+                    const viewSource = viewVideo.getChild( 0 );
+
+                    return modelWriter.createElement( 'ucVideo', { src: viewSource.getAttribute( 'src' ) } );
+                }
+            } ) );
+
+        conversion.for( 'dataDowncast' ).add( downcastElementToElement( {
             model: 'ucVideo',
             view: ( modelElement, viewWriter ) => createVideoViewElement( viewWriter )
         } ) );
@@ -79,7 +91,7 @@ export default class UcVideoEditing extends Plugin {
                 },
                 model: 'type'
             } ) )
-            .add( viewVideoToModel() );
+            ;//.add( viewVideoToModel() );
     }
 }
 
