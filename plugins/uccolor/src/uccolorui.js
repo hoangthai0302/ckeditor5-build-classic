@@ -49,10 +49,10 @@ export default class UcColorUI extends Plugin {
                 const fakeEvent = document.createEvent('MouseEvent');
                 const fakeTarget = document.querySelector('.ck-uccolor');
                 const data = {};
-                data.color = command.textColor !== undefined ? command.textColor : '#353535';
+                data.color = command.value !== undefined ? command.value : '#353535';
 
                 const callback = function(color) {
-                    editor.execute( UCCOLOR, {textColor: color});
+                    editor.execute( UCCOLOR, {value: color});
                 };
 
                 this.ucColorDialogOpened = true;

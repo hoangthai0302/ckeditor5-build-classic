@@ -17,28 +17,70 @@ export default class UcColorCommand extends Command {
     refresh() {
         const model = this.editor.model;
         const doc = model.document;
+        this.isEnabled = true;
 
-        this.textColor = doc.selection.getAttribute( 'textColor' );
+        if (doc.selection.isCollapsed) {
+            // Take the first parent from selection
+            const parent = Array.from( doc.selection.getSelectedBlocks() )[ 0 ];
 
-        // enabled if any selection is done
-        this.isEnabled = !doc.selection.isCollapsed;
-
-        if (this.isEnabled) {
-            this.isEnabled = model.schema.checkAttributeInSelection(doc.selection, 'textColor');
+            this.value = parent.getAttribute( 'blockTextColor' );
+        } else {
+            this.value = doc.selection.getAttribute( 'textColor' );
         }
     }
 
-    execute( data ) {
-
+    execute( options = {} ) {
         const model = this.editor.model;
-        const doc = model.document;
-        const selection = model.document.selection;
+        const document = model.document;
+        const selection = document.selection;
+
+        // Take the color from options.value.
+        const color = options.value;
 
         model.change( writer => {
-            const ranges = model.schema.getValidRanges( selection.getRanges(), 'textColor' );
+            // Selection is collapsed - work on selection parent.
+            if ( selection.isCollapsed ) {
+                // Take the first parent from selection
+                const parent = Array.from( selection.getSelectedBlocks() )[ 0 ];
 
-            for ( const range of ranges ) {
-                writer.setAttribute( 'textColor', data.textColor, range );
+                // If color is passed - set the attribute. Remove otherwise.
+                if ( color ) {
+                    writer.setAttribute( 'blockTextColor', color, parent );
+                } else {
+                    writer.removeAttribute( 'blockTextColor', parent );
+                }
+            }
+            // Selection is not collapsed - work on selected text.
+            else {
+
+                // Get ranges on which 'textColor' attribute can be set.
+                const ranges = model.schema.getValidRanges(
+                    selection.getRanges(),
+                    'textColor'
+                );
+
+                for ( const range of ranges ) {
+                    const shouldUseBlock = range.isFlat && range.start.isAtStart && range.end.isAtEnd;
+                    if (shouldUseBlock) {
+                        const parent = range.start.parent;
+                        // If color is passed - set the attribute. Remove otherwise.
+                        if ( color ) {
+                            // remove inside color
+                            writer.removeAttribute('textColor', range);
+                            writer.setAttribute( 'blockTextColor', color, parent );
+                        } else {
+                            writer.removeAttribute( 'blockTextColor', parent );
+                        }
+                    } else {
+
+                        // If color is passed - set the attribute. Remove otherwise.
+                        if (color) {
+                            writer.setAttribute('textColor', color, range);
+                        } else {
+                            writer.removeAttribute('textColor', range);
+                        }
+                    }
+                }
             }
         } );
     }
