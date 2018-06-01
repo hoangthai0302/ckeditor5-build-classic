@@ -32,9 +32,9 @@ module.exports = {
             language: buildConfig.config.language,
             additionalLanguages: ['ru']
         } ),
-        // new BabiliPlugin( null, {
-        //     comments: false
-        // } ),
+        new BabiliPlugin( null, {
+            comments: false
+        } ),
         new webpack.BannerPlugin( {
             banner: bundler.getLicenseBanner(),
             raw: true

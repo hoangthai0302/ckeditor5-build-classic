@@ -12,7 +12,7 @@ import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
 import ucLineHeightIcon from '../theme/icons/uclineheight.svg';
 
-const UC_LINE_HEIGHT = 'ucLineHeight';
+const UC_VIDEO = 'ucVideo';
 
 /**
  * The bold UI feature. It introduces the Bold button.
@@ -28,9 +28,9 @@ export default class UcLineHeightUI extends Plugin {
         const t = editor.t;
 
         // Add bold button to feature components.
-        editor.ui.componentFactory.add( UC_LINE_HEIGHT, locale => {
-            const command = editor.commands.get( UC_LINE_HEIGHT );
-            const view = new ButtonView( UC_LINE_HEIGHT );
+        editor.ui.componentFactory.add( UC_VIDEO, locale => {
+            const command = editor.commands.get( UC_VIDEO );
+            const view = new ButtonView( UC_VIDEO );
 
             view.set( {
                 label: t( 'Line Height' ),
@@ -41,22 +41,22 @@ export default class UcLineHeightUI extends Plugin {
             view.bind( 'isOn', 'isEnabled' ).to( command, 'value', 'isEnabled' );
 
             // add ck-uc-line-height class
-            view.template.attributes.class.push('ck-uc-line-height');
+            view.template.attributes.class.push('ck-uc-video');
 
 
             // Execute command.
             this.listenTo( view, 'execute', () => {
                 const fakeEvent = document.createEvent('MouseEvent');
-                const fakeTarget = document.querySelector('.ck-uc-line-height');
+                const fakeTarget = document.querySelector('.ck-uc-video');
                 const data = {};
                 data.lineHeight = command.lineHeight !== undefined ? command.lineHeight : 1;
 
-                const callback = function(lineHeight) {
-                    editor.execute( UC_LINE_HEIGHT, {lineHeight: lineHeight});
+                const callback = function(url) {
+                    editor.execute( UC_VIDEO, {value: url});
                 };
 
                 this.ucLineHeightDialogOpened = true;
-                editor.owner.openLineHeightDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callback);
+                editor.owner.openVideoDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callback);
 			} );
 
             return view;

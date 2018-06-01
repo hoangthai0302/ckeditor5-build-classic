@@ -17,14 +17,10 @@ export default class UcLineHeightCommand extends Command {
         const model = this.editor.model;
         const doc = model.document;
 
-        // this.lineHeight = doc.selection.getAttribute( 'lineHeight' );
-        //
-        // // enabled if any selection is done
-        // this.isEnabled = !doc.selection.isCollapsed;
-        //
-        // if (this.isEnabled) {
-        //     this.isEnabled = model.schema.checkAttributeInSelection(doc.selection, 'lineHeight');
-        // }
+        this.videoUrl = doc.selection.getAttribute( 'lineHeight' );
+
+        // enabled if any selection is done
+        this.isEnabled = doc.selection.isCollapsed;
     }
 
     execute( data ) {
