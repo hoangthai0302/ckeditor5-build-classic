@@ -14,7 +14,8 @@ import {
 import { upcastElementToAttribute } from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
 import LinkCommand from './uclinkcommand';
 import UnlinkCommand from './ucunlinkcommand';
-import { createLinkElement, ensureSafeUrl } from '@ckeditor/ckeditor5-link/src/utils';
+import { createLinkElement } from '@ckeditor/ckeditor5-link/src/utils';
+import { ensureSafeUrl } from './utils';
 import bindTwoStepCaretToAttribute from '@ckeditor/ckeditor5-engine/src/utils/bindtwostepcarettoattribute';
 
 /**
