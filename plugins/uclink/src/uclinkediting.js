@@ -14,7 +14,7 @@ import {
 import { upcastElementToAttribute } from '@ckeditor/ckeditor5-engine/src/conversion/upcast-converters';
 import LinkCommand from './uclinkcommand';
 import UnlinkCommand from './ucunlinkcommand';
-import { createLinkElement } from '@ckeditor/ckeditor5-link/src/utils';
+import { createLinkElement, ensureSafeUrl } from '@ckeditor/ckeditor5-link/src/utils';
 import bindTwoStepCaretToAttribute from '@ckeditor/ckeditor5-engine/src/utils/bindtwostepcarettoattribute';
 
 /**
@@ -34,8 +34,13 @@ export default class UcLinkEditing extends LinkEditing {
 		// Allow link attribute on all inline nodes.
 		editor.model.schema.extend( '$text', { allowAttributes: 'linkHref' } );
 
-		editor.conversion.for( 'downcast' )
-			.add( downcastAttributeToElement( { model: 'linkHref', view: createLinkElement } ) );
+        editor.conversion.for( 'dataDowncast' )
+            .add( downcastAttributeToElement( { model: 'linkHref', view: createLinkElement } ) );
+
+        editor.conversion.for( 'editingDowncast' )
+            .add( downcastAttributeToElement( { model: 'linkHref', view: ( href, writer ) => {
+                return createLinkElement( ensureSafeUrl( href ), writer );
+            } } ) );
 
 		editor.conversion.for( 'upcast' )
 			.add( upcastElementToAttribute( {
