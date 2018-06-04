@@ -4,20 +4,18 @@
  */
 
 /**
- * @module uclineheight/uclineheightcommand
+ * @module ucvideo/ucvideocommand
  */
 
 import Command from '@ckeditor/ckeditor5-core/src/command';
 import Range from '@ckeditor/ckeditor5-engine/src/model/range';
 import toMap from '@ckeditor/ckeditor5-utils/src/tomap';
 
-export default class UcLineHeightCommand extends Command {
+export default class UcVideoCommand extends Command {
 
     refresh() {
         const model = this.editor.model;
         const doc = model.document;
-
-        this.videoUrl = doc.selection.getAttribute( 'lineHeight' );
 
         // enabled if any selection is done
         this.isEnabled = doc.selection.isCollapsed;
@@ -33,12 +31,5 @@ export default class UcLineHeightCommand extends Command {
             const ranges = model.schema.getValidRanges( selection.getRanges(), 'ucVideo' );
 
         } );
-        // for ( const range of ranges ) {
-        //     if ( parseInt(data.lineHeight) ) {
-        //         writer.setAttribute( 'lineHeight', data.lineHeight, range );
-        //     } else {
-        //         writer.removeAttribute( 'lineHeight', range );
-        //     }
-        // }
     }
 }

@@ -4,13 +4,13 @@
  */
 
 /**
- * @module uclineheight/uclineheightui
+ * @module ucvideo/ucvideoui
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
-import ucLineHeightIcon from '../theme/icons/uclineheight.svg';
+import ucVideoIcon from '../theme/icons/ucvideo.svg';
 
 const UC_VIDEO = 'ucVideo';
 
@@ -19,7 +19,7 @@ const UC_VIDEO = 'ucVideo';
  *
  * @extends module:core/plugin~Plugin
  */
-export default class UcLineHeightUI extends Plugin {
+export default class UcVideoUI extends Plugin {
     /**
      * @inheritDoc
      */
@@ -33,14 +33,14 @@ export default class UcLineHeightUI extends Plugin {
             const view = new ButtonView( UC_VIDEO );
 
             view.set( {
-                label: t( 'Line Height' ),
-                icon: ucLineHeightIcon,
+                label: t( 'Video' ),
+                icon: ucVideoIcon,
                 tooltip: true
             } );
 
-            view.bind( 'isOn', 'isEnabled' ).to( command, 'value', 'isEnabled' );
+            // view.bind( 'isOn', 'isEnabled' ).to( command, 'value', 'isEnabled' );
 
-            // add ck-uc-line-height class
+            // add ck-uc-video class
             view.template.attributes.class.push('ck-uc-video');
 
 
@@ -49,13 +49,18 @@ export default class UcLineHeightUI extends Plugin {
                 const fakeEvent = document.createEvent('MouseEvent');
                 const fakeTarget = document.querySelector('.ck-uc-video');
                 const data = {};
-                data.lineHeight = command.lineHeight !== undefined ? command.lineHeight : 1;
 
                 const callback = function(url) {
-                    editor.execute( UC_VIDEO, {value: url});
+                    editor.model.change( writer => {
+                        const videoElement = writer.createElement( 'ucVideo', {
+                            src: 'https://www.w3schools.com/html/mov_bbb.mp4'
+                        } );
+                        // Insert the image in the current selection location.
+                        editor.model.insertContent( videoElement, editor.model.document.selection );
+                    });
                 };
 
-                this.ucLineHeightDialogOpened = true;
+                this.ucVideoDialogOpened = true;
                 editor.owner.openVideoDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callback);
 			} );
 
@@ -67,9 +72,9 @@ export default class UcLineHeightUI extends Plugin {
 
         // Close the panel on the Esc key press when the editable has focus and the balloon is visible.
         editor.keystrokes.set( 'Esc', ( data, cancel ) => {
-            if (this.ucLineHeightDialogOpened === true) {
-                this.ucLineHeightDialogOpened = false;
-                // editor.owner.closeColorDialog(editor.owner);
+            if (this.ucVideoDialogOpened === true) {
+                this.ucVideoDialogOpened = false;
+                editor.owner.closeVideoDialog(editor.owner);
             }
             cancel();
         } );

@@ -9,6 +9,7 @@
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import UcVideoEditing from './ucvideoediting';
+import UcVideoUI from './ucvideoui';
 import Widget from '@ckeditor/ckeditor5-widget/src/widget';
 
 /**
@@ -16,12 +17,12 @@ import Widget from '@ckeditor/ckeditor5-widget/src/widget';
  *
  * @extends module:core/plugin~Plugin
  */
-export default class UcLineHeight extends Plugin {
+export default class UcVideo extends Plugin {
 	/**
 	 * @inheritDoc
 	 */
 	static get requires() {
-		return [ UcVideoEditing, Widget ];
+		return [ UcVideoEditing, UcVideoUI, Widget ];
 	}
 
 	/**

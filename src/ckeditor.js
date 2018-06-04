@@ -100,6 +100,7 @@ ClassicEditor.build = {
 				'blockQuote',
 				'|',
 				'ucMedia',
+				'ucVideo',
 				'ucColor',
 				'undo',
 				'redo',
