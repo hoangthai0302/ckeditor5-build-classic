@@ -75,6 +75,15 @@ a.ck-button.ck-on,
     margin-left: 32px;
 }
 
+.ck-editor__editable .uc-video.ucvideo-style-side {
+    margin-left: 32px;
+}
+.ck-editor__editable .uc-video.ucvideo-style-align-left {
+    margin-right: 32px;
+}
+.ck-editor__editable .uc-video.ucvideo-style-align-right {
+    margin-left: 32px;
+}
 
 .ck-list__item {
     min-width: 100% !important;
