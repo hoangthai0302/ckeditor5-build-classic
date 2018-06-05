@@ -22,6 +22,8 @@ import { upcastElementToElement, upcastAttributeToAttribute } from '@ckeditor/ck
 
 import ViewPosition from '@ckeditor/ckeditor5-engine/src/view/position';
 
+import { ensureSafeUrl } from './utils';
+
 /**
  * The image engine plugin.
  * It registers `<image>` as a block element in the document schema, and allows `alt`, `src` and `srcset` attributes.
@@ -56,7 +58,7 @@ export default class UcVideoEditing extends Plugin {
                 model: ( viewVideo, modelWriter ) => {
                     const viewSource = viewVideo.getChild( 0 );
 
-                    return modelWriter.createElement( 'ucVideo', { src: viewSource.getAttribute( 'src' ) } );
+                    return modelWriter.createElement( 'ucVideo', { src: ensureSafeUrl( viewSource.getAttribute( 'src' ) ) } );
                 }
             } ) );
 
@@ -82,7 +84,7 @@ export default class UcVideoEditing extends Plugin {
                         src: true
                     }
                 },
-                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { src: viewSource.getAttribute( 'src' ) } )
+                model: ( viewSource, modelWriter ) => modelWriter.createElement( 'ucVideo', { src: ensureSafeUrl( viewSource.getAttribute( 'src' ) ) } )
             } ) )
             .add( upcastAttributeToAttribute( {
                 view: {

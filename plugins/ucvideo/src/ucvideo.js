@@ -8,8 +8,8 @@
  */
 
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
-import UcVideoEditing from './ucvideoediting';
-import UcVideoUI from './ucvideoui';
+import UcVideoEditing from './ucvideo/ucvideoediting';
+import UcVideoUI from './ucvideo/ucvideoui';
 import Widget from '@ckeditor/ckeditor5-widget/src/widget';
 
 /**

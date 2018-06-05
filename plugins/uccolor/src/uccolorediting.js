@@ -76,7 +76,6 @@ export default class UcColorEditing extends Plugin {
             } ) );
 
         // Create bold command.
-        editor.commands.add( 'ucColor', new UcColorCommand( editor, 'blockTextColor' ) );
-        editor.commands.add( 'ucColor', new UcColorCommand( editor, 'textColor' ) );
+        editor.commands.add( 'ucColor', new UcColorCommand( editor ) );
     }
 }

@@ -38,6 +38,9 @@ import UcTransformPlugin from '../plugins/uctransform/src/uctransform';
 import UcLetterSpacingPlugin from '../plugins/ucletterspacing/src/ucletterspacing';
 import UcLineHeightPlugin from '../plugins/uclineheight/src/uclineheight';
 import UcVideoPlugin from '../plugins/ucvideo/src/ucvideo';
+import UcVideostylePlugin from '../plugins/ucvideo/src/ucvideostyle';
+import UcVideotoolbarPlugin from '../plugins/ucvideo/src/ucvideotoolbar';
+
 
 import '../theme/variables.css';
 import '../theme/style.css';
@@ -72,7 +75,9 @@ ClassicEditor.build = {
         UcTransformPlugin,
         UcLetterSpacingPlugin,
         UcLineHeightPlugin,
-        UcVideoPlugin
+        UcVideoPlugin,
+        UcVideostylePlugin,
+		UcVideotoolbarPlugin
 	],
 	config: {
 		toolbar: {
@@ -137,6 +142,14 @@ ClassicEditor.build = {
     	fontSize: {
         	options: [8, 10, 12, 14, 16, 18, 20, 22, 24, 28, 32, 36, 48, 60, 72]
     	},
-		language: 'en'
+		language: 'en',
+        ucvideo: {
+            toolbar: [ 'ucvideoStyle:alignLeft', 'ucvideoStyle:full', 'ucvideoStyle:alignRight' ],
+            styles: [
+                'full',
+                'alignLeft',
+                'alignRight'
+            ]
+        },
 	}
 };

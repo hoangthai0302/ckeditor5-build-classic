@@ -6,11 +6,11 @@
 'use strict';
 
 module.exports = {
-    // The editor creator to use.
-    editor: '@ckeditor/ckeditor5-editor-classic/src/classiceditor',
+	// The editor creator to use.
+	editor: '@ckeditor/ckeditor5-editor-classic/src/classiceditor',
 
-    // The name under which the editor will be exported.
-    moduleName: 'ClassicEditor',
+	// The name under which the editor will be exported.
+	moduleName: 'ClassicEditor',
 
 	// Plugins to include in the build.
 	plugins: [

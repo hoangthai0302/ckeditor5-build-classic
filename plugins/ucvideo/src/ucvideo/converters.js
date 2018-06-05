@@ -81,8 +81,8 @@ export function srcsetAttributeConverter() {
         }
 
         const writer = conversionApi.writer;
-        const figure = conversionApi.mapper.toViewElement( data.item );
-        const source = figure.getChild( 0 );
+        const video = conversionApi.mapper.toViewElement( data.item );
+        const source = video.getChild( 0 );
 
         if ( data.attributeNewValue === null ) {
             const srcset = data.attributeOldValue;
@@ -122,8 +122,8 @@ export function modelToViewAttributeConverter( attributeKey ) {
         }
 
         const viewWriter = conversionApi.writer;
-        const figure = conversionApi.mapper.toViewElement( data.item );
-        const source = figure.getChild( 0 );
+        const video = conversionApi.mapper.toViewElement( data.item );
+        const source = video.getChild( 0 );
 
         if ( data.attributeNewValue !== null ) {
             viewWriter.setAttribute( data.attributeKey, data.attributeNewValue, source );

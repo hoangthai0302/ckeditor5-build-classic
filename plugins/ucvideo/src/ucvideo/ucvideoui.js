@@ -10,7 +10,10 @@
 import Plugin from '@ckeditor/ckeditor5-core/src/plugin';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
 
-import ucVideoIcon from '../theme/icons/ucvideo.svg';
+import ucVideoIcon from '../../theme/icons/ucvideo.svg';
+import { ensureSafeUrl } from './utils';
+
+import '../../theme/ucvideo.css';
 
 const UC_VIDEO = 'ucVideo';
 
@@ -53,7 +56,7 @@ export default class UcVideoUI extends Plugin {
                 const callback = function(url) {
                     editor.model.change( writer => {
                         const videoElement = writer.createElement( 'ucVideo', {
-                            src: 'https://www.w3schools.com/html/mov_bbb.mp4'
+                            src: ensureSafeUrl(url)
                         } );
                         // Insert the image in the current selection location.
                         editor.model.insertContent( videoElement, editor.model.document.selection );

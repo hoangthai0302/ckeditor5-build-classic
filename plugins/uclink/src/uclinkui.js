@@ -12,9 +12,8 @@ import ClickObserver from '@ckeditor/ckeditor5-engine/src/view/observer/clickobs
 import Range from '@ckeditor/ckeditor5-engine/src/view/range';
 import { isLinkElement } from '@ckeditor/ckeditor5-link/src/utils';
 import clickOutsideHandler from '@ckeditor/ckeditor5-ui/src/bindings/clickoutsidehandler';
-
+import { ensureSafeUrl } from './utils';
 import ButtonView from '@ckeditor/ckeditor5-ui/src/button/buttonview';
-
 import linkIcon from '../theme/icons/link.svg';
 import unlinkIcon from '../theme/icons/unlink.svg';
 
@@ -167,7 +166,7 @@ export default class UcLinkUI extends Plugin {
             cancel() {
             },
             save(data) {
-                editor.execute( 'ucLink', data.linkHref );
+                editor.execute( 'ucLink', ensureSafeUrl( data.linkHref ) );
             }
         };
         editor.owner.openLinkDialog(editor, fakeEvent, fakeTarget, editor.owner, data, callbacks);

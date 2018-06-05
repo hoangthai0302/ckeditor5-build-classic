@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2003-2018, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md.
+ */
+
+:root {
+    --ck-ucvideo-style-spacing: 1.5em;
+}
+
+.ck-content {
+& .ucvideo-style-side,
+& .ucvideo-style-align-left,
+& .ucvideo-style-align-center,
+& .ucvideo-style-align-right {
+      max-width: 50%;
+  }
+
+& .ucvideo-style-side {
+      float: right;
+      margin-left: var(--ck-ucvideo-style-spacing);
+  }
+
+& .ucvideo-style-align-left {
+      float: left;
+      margin-right: var(--ck-ucvideo-style-spacing);
+  }
+
+& .ucvideo-style-align-center {
+      margin-left: auto;
+      margin-right: auto;
+  }
+
+& .ucvideo-style-align-right {
+      float: right;
+      margin-left: var(--ck-ucvideo-style-spacing);
+  }
+}
