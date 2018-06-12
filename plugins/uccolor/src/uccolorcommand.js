@@ -22,8 +22,11 @@ export default class UcColorCommand extends Command {
         if (doc.selection.isCollapsed) {
             // Take the first parent from selection
             const parent = Array.from( doc.selection.getSelectedBlocks() )[ 0 ];
-
-            this.value = parent.getAttribute( 'blockTextColor' );
+            if (parent !== undefined) {
+                this.value = parent.getAttribute('blockTextColor');
+            } else {
+                this.value = '#353535';
+            }
         } else {
             this.value = doc.selection.getAttribute( 'textColor' );
         }
