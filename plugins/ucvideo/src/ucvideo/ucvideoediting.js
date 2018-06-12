@@ -56,9 +56,18 @@ export default class UcVideoEditing extends Plugin {
                     name: 'video'
                 },
                 model: ( viewVideo, modelWriter ) => {
-                    const viewSource = viewVideo.getChild( 0 );
+                    var viewSource = null;
+                    if (viewVideo._children !== undefined) {
+                        viewVideo._children.forEach((child) => {
+                            if (child.name !==undefined && child.name === 'source') {
+                                viewSource = child;
+                            }
+                        });
+                    }
 
-                    return modelWriter.createElement( 'ucVideo', { src: ensureSafeUrl( viewSource.getAttribute( 'src' ) ) } );
+                    if (viewSource !== null) {
+                        return modelWriter.createElement('ucVideo', {src: ensureSafeUrl(viewSource.getAttribute('src'))});
+                    }
                 }
             } ) );
 
